@@ -10,7 +10,6 @@ public class LevelUpSystem : ComponentSystem
         Entities.ForEach((ref LevelComponent levelComponent) =>
         {
             levelComponent.level += 1f * Time.DeltaTime;
-            Debug.Log(levelComponent.level);
         });
     }
 }
