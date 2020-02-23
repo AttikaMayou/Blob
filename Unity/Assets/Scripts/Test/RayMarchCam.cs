@@ -8,6 +8,7 @@ public class RayMarchCam: MonoBehaviour
     Light[] lights;
     //Texture2D lightInfo;
     ComputeBuffer lightInfo;
+    public Light lightScene;
     float[] lightPositions;
 
     public Transform p1;
@@ -29,7 +30,7 @@ public class RayMarchCam: MonoBehaviour
 
         for (int i = 0; i < lights.Length; i++)
         {
-            Vector3 lp = lights[i].transform.position;
+            Vector3 lp = lightScene.transform.position;
 
             lightPositions[(i * 4) + 0] = lp.x;
             lightPositions[(i * 4) + 1] = lp.y;
