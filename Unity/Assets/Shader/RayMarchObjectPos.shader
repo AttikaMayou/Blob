@@ -29,6 +29,7 @@
 			uniform float3  _p1;
 			uniform float3  _p2;
 			uniform float radius;
+			float rayOrigin; 
 
 			StructuredBuffer<float> _LightInfo;
 
@@ -118,7 +119,7 @@
 				float3 col = lambertian + specular;
 				return clamp(col, 0.0, 1.0);
 			}
-
+			
 			float3 calculateLight(float3 color, float3 p, float3 viewVec, float3 normal, float3 aLightPos, float3 lightColor) {
 				float3 lightDirection = normalize(aLightPos - p);
 
@@ -140,7 +141,7 @@
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
 
-				float3 rayOrigin = _WorldSpaceCameraPos;
+				float3 rayOrigin = mul(unity_WorldToObject, float4(_WorldSpaceCameraPos, 1.0f));
 				float2 myUv = i.uv;
 
 				float fov = tan(_Fov);
@@ -149,23 +150,23 @@
 				myUv.y = (1.0 - 2.0 * i.uv.y) * fov;
 				float3 rayDirection = normalize(1.0 * _CamForward + _CamRight * myUv.x + _CamUp * myUv.y);
 				//-----------------RAYMARCHING------------------
-				float t = RaymarchHit(rayOrigin, rayDirection, _ProjectionParams.y, _ProjectionParams.z);
+				float t = RaymarchHit(rayOrigin, 1.0, _ProjectionParams.y, _ProjectionParams.z);
 
 				if (t < _ProjectionParams.z) {
 					float3 color = float3(0.0, 0.0, 0.0);
 					float3 p = rayOrigin + (t * rayDirection);
-					float3 normal = estimateNormal(p);
+					//float3 normal = estimateNormal(p);
 					float3 viewVec = normalize(rayOrigin - p);
 
 					uint numStructs = 0;
 					uint numStrides = 0;
 					_LightInfo.GetDimensions(numStructs, numStrides);
-					for (uint i = 0; i < numStructs / 4; i++) {
+					/*for (uint i = 0; i < numStructs / 4; i++) {
 
 						float4 lightPos = float4(_LightInfo[(i * 4) + 0], _LightInfo[(i * 4) + 1], _LightInfo[(i * 4) + 2], _LightInfo[(i * 4) + 3]);
 
-						color += calculateLight(color, p, viewVec, normal, lightPos.xyz, float3(1.0, 1.0, 1.0));
-					}
+						//color += calculateLight(color, p, viewVec, normal, lightPos.xyz, float3(1.0, 1.0, 1.0));
+					}*/
 
 
 					color = clamp(color, 0.0, 1.0);
