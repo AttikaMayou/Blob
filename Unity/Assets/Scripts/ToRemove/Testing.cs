@@ -27,10 +27,10 @@ public class Testing : MonoBehaviour
             typeof(Translation),
             typeof(RenderMesh),
             typeof(LocalToWorld),
-            typeof(MoveSpeedComponent)
+            typeof(MoveComponent)
         );
 
-        NativeArray<Entity> entityArray = new NativeArray<Entity>(10000, Allocator.Temp);
+        NativeArray<Entity> entityArray = new NativeArray<Entity>(10, Allocator.Temp);
         entityManager.CreateEntity(entityArchetype, entityArray);
 
 
@@ -38,7 +38,7 @@ public class Testing : MonoBehaviour
         {
             Entity entity = entityArray[i];
             entityManager.SetComponentData(entity, new LevelComponent { level = UnityEngine.Random.Range(10, 20) }); //applique un component à une entité designéeS
-            entityManager.SetComponentData(entity, new MoveSpeedComponent { moveSpeed = UnityEngine.Random.Range(1f, 2f) });
+            entityManager.SetComponentData(entity, new MoveComponent { moveSpeed = UnityEngine.Random.Range(1f, 2f) });
             entityManager.SetComponentData(entity, new Translation { Value = new float3(UnityEngine.Random.Range(-10f, 10f),
                                                                                         UnityEngine.Random.Range(-5f, 5f),
                                                                                         0) }); 
