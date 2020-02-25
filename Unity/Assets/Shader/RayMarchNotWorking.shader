@@ -1,18 +1,18 @@
 ﻿Shader "Margot/RayMarch"
 {
-    /*Properties
+    Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-    }*/
+    }
 
     SubShader
     {
-        Tags {"Queue"="Transparent"}
+        Tags {"RenderType"="Opaque"}
         //blend object behind object with this shader
        // Blend SrcAlpha OneMinusSrcAlpha;
 
         // No culling or depth
-        //Cull Off ZWrite Off ZTest Always
+        Cull Off ZWrite Off ZTest Always
 
         Pass
         {
@@ -23,15 +23,16 @@
 
             struct appdata
             {
-                float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
+				float4 vertex : POSITION;
+				float2 uv : TEXCOORD0;
+				float3 hitPos : TEXCOORD2;
             };
 
             //vertex to fragment 
             struct v2f
             {
-                float2 uv : TEXCOORD0;
-                float4 vertex : SV_POSITION;
+				float2 uv : TEXCOORD0;
+				float4 vertex : SV_POSITION;
                // float3 hitPos : TEXCOORD1;
             };
 
@@ -41,8 +42,8 @@
             v2f vert (appdata v)
             {
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+				o.vertex = UnityObjectToClipPos(v.vertex);
+				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 //o.uv = mul(unity_WorldToObject, float4(_WorldSpaceCameraPos, 1.0f));
                 //o.hitPos = v.vertex;
                 return o;
@@ -51,7 +52,7 @@
             //---------------raymarching--------------------------
             float getDistance(float3 p)
             {
-                float dist = length(p) - 1.2f;
+                float dist = length(p) - 0.5f;
                 return dist;
             }
 
@@ -92,18 +93,18 @@
             //fragment shader
             fixed4 frag(v2f i) : SV_Target
             {
+				fixed4 col = tex2D(_MainTex, i.uv);
                 float2 uv = i.uv;
                 float3 rayOrigin = float3(0, 0, -3.f);
                 float3 rayDirection = normalize(float3(uv.x, uv.y, 1.f));
 
                 float d = RaymarchHit(rayOrigin, rayDirection);
-                fixed4 col = 0;
-/*
-                if (d < MAX_DISTANCE)
+
+                /*if (d < MAX_DISTANCE)
                 {
                     col.r = 1.f;
                 }*/
-                col.rg = uv;
+				//col.rg = uv;
                 return col;
             }
             ENDCG
