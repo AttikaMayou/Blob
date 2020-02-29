@@ -70,7 +70,6 @@
 				return a;
 			}
 			
-			//TODO : à retoucher
 			float sceneSDF(float3 position) {
 
 				float sphere = signedSphere(position - _p1, 0.3);
