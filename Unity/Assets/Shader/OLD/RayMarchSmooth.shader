@@ -1,4 +1,4 @@
-﻿Shader "Margot/RayMarchSmooth"
+﻿Shader "Margot/RaymarchingSmooth"
 {
 	Properties
 	{
@@ -28,14 +28,14 @@
 
 			uniform float3  _p1;
 			uniform float3  _p2;
-			uniform float radius;
-			float rayOrigin; 
+			uniform float3  _p3;
 
 			StructuredBuffer<float> _LightInfo;
 
-			//how many steps to looking for a hit
-			#define STEPS 64
+			static const int MAX_MARCHING_STEPS = 256;
 			static const float EPSILON = 0.00001;
+			static const float PI = 3.141592653589793238462643383279502884197169399375105820974;
+			static const float PI_HALF = 1.570796326794896619231321691639751442098584699687552910487;
 
 			struct appdata
 			{
@@ -58,18 +58,26 @@
 			}
 
 			sampler2D _MainTex;
-			//-----------------------------RAYMARCHING--------------------------
-			//TODO : pass radius uniform
+			/* Primative SDF functions */
 			float signedSphere(float3 position, float radius) {
+				//sqrt(x^2 + y^2 + z^2) - radius
 				return length(position) - radius;
 			}
-			
+
+			float unsignedBox(float3 position, float3 b)
+			{
+				return length(max(abs(position) - b, 0.0));
+			}
+
+			// http://iquilezles.org/www/articles/smin/smin.htm
+			// polynomial smooth min
 			float smin(float a, float b, float k) {
 				float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
 				return lerp(b, a, h) - k * h * (1.0 - h);
 				return a;
 			}
-			
+
+			// there is only one "surface", the scene surface.
 			float sceneSDF(float3 position) {
 
 				float sphere = signedSphere(position - _p1, 0.3);
@@ -78,52 +86,61 @@
 				float sphere2 = signedSphere(position - _p2, 0.3);
 				result = smin(result, sphere2, 0.5);
 
+				float box = unsignedBox(position - _p3, float3(2.5, .5, 2.5));
+				result = smin(result, box, 0.5);
+
 				return result;
 			}
 
-			//Search for raymarch hit : take position of the pixel and the ray from the camera to the object
-			float RaymarchHit(float3 rayOrigin, float3 rayDirection, float min, float max)
-			{
+			float rayMarching(float3 rayOrigin, float3 rayDirection, float min, float max) {
+
 				float t = min;
-				//We increase the length of the ray -> !!depuis le début de la forme qui rend le shader et pas depuis la camera
-				for (int i = 0; i < STEPS; i++)
-				{
+				for (int i = 0; i < MAX_MARCHING_STEPS; i++) {
 					float3 p = rayOrigin + (t * rayDirection);
 
 					float dist = sceneSDF(p);
 
+					// if the signed distance function evaluates to a negative number
 					if (dist < EPSILON) {
+						// we are in the scene "surface"
 						return t;
 					}
-
+					// otherwise move to the next step along the ray
+					// the SDF gave us the distance to the surface, so that's why we step that much
 					t += dist;
 
 					if (t >= max) {
+						// don't march past the max t
 
 						return max;
 					}
 				}
 				return max;
 			}
-			//---------------------LIGHT--------------------
-			float3 lambertShading(float3 normal, float3 lightDirection, float3 diffuse, float3 lightColor) {
+
+			float3 labertianShading(float3 normal, float3 lightDirection, float3 diffuse, float3 lightColor) {
 				float3 col = lightColor * (dot(normal, lightDirection) * diffuse);
 				return clamp(col, 0.0, 1.0);
 			}
 
 			float3 phongShading(float3 normal, float3 lightDirection, float3 diffuse, float3 viewVec, float3 lightColor) {
-				float3 lambertian = lambertShading(normal, lightDirection, diffuse, lightColor);
+				float3 lambertian = labertianShading(normal, lightDirection, diffuse, lightColor);
 				float3 h = normalize(viewVec + lightDirection);
 				float3 specular = float3(0.1, 0.1, 0.1) * pow(max(0, dot(normal, h)), 10);
 				float3 col = lambertian + specular;
 				return clamp(col, 0.0, 1.0);
 			}
-			
+
 			float3 calculateLight(float3 color, float3 p, float3 viewVec, float3 normal, float3 aLightPos, float3 lightColor) {
 				float3 lightDirection = normalize(aLightPos - p);
 
 				float lightDistance = length(aLightPos - p);
+
+				//float shadow = rayMarching(p, lightDirection, 0.0001, lightDistance);
+				//if (shadow == lightDistance) {
 				color += phongShading(normal, lightDirection, float3(1.0, 0.0, 0.0), viewVec, lightColor);
+
+				//}
 				return color;
 			}
 
@@ -135,24 +152,28 @@
 					sceneSDF(float3(p.x, p.y, p.z + EPSILON)) - sceneSDF(float3(p.x, p.y, p.z - EPSILON))
 					));
 			}
-
 			fixed4 frag(v2f i) : SV_Target
 			{
 				fixed4 col = tex2D(_MainTex, i.uv);
 
-				float3 rayOrigin = mul(unity_WorldToObject, float4(_WorldSpaceCameraPos, 1.0f));
+				float3 rayOrigin = _WorldSpaceCameraPos;
 				float2 myUv = i.uv;
 
 				float fov = tan(_Fov);
-
+				// _ScreenParams.x/ _ScreenParams.y = aspect
 				myUv.x = (2.0 * i.uv.x - 1.0) * (_ScreenParams.x / _ScreenParams.y) * fov;
 				myUv.y = (1.0 - 2.0 * i.uv.y) * fov;
 				float3 rayDirection = normalize(1.0 * _CamForward + _CamRight * myUv.x + _CamUp * myUv.y);
-				//-----------------RAYMARCHING------------------
-				float t = RaymarchHit(rayOrigin, 1.0, _ProjectionParams.y, _ProjectionParams.z);
+
+				// do the marching    
+				//_ProjectionParams.y = near clip
+				//_ProjectionParams.z = far clip	
+				float t = rayMarching(rayOrigin, rayDirection, _ProjectionParams.y, _ProjectionParams.z);
 
 				if (t < _ProjectionParams.z) {
 					float3 color = float3(0.0, 0.0, 0.0);
+					// TODO get ambient light from unity
+					//color = float3(0.05,0.05,0.05);
 					float3 p = rayOrigin + (t * rayDirection);
 					float3 normal = estimateNormal(p);
 					float3 viewVec = normalize(rayOrigin - p);

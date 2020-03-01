@@ -38,6 +38,18 @@
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
+            uniform float3 positionsSphere1;
+            uniform float3 positionsSphere2;
+
+            uniform float3 _CamForward;
+            uniform float3 _CamRight;
+            uniform float3 _CamUp;
+
+            uniform float4x4 CameraToWorldMatrix;
+            uniform float4x4 CameraFrustrum;
+            uniform float3 CameraWorldSPace;
+            uniform float ratio;
+            uniform float fov;
 
             v2f vert (appdata v)
             {
@@ -56,6 +68,13 @@
                 return dist;
             }
 
+            //----------------creation de la plane----------------------------
+            float sdPlane(float3 p, float4 n)
+            {
+                // n must be normalized
+                return dot(p, n.xyz) + n.w;
+            }
+
 			//---------------smooth objet de la scene entre eux-------------
 			float smooth(float a, float b, float k) {
 				float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
@@ -66,18 +85,15 @@
 			//TODO : finir creation de la scene
 			float createScene(float3 position) 
 			{
-				float sphere = getDistance(position);
+				float sphere = getDistance(position - positionsSphere1);
 				float result = sphere;
 
-				float sphere2 = getDistance(position);
+				float sphere2 = getDistance(position - positionsSphere2);
 				result = smooth(result, sphere2, 0.5);
 
-				//Plane en sdf -> voir pour récupérer la vraie scene
-				/*float sdPlane( vec3 p, vec4 n )
-				{
-					// n must be normalized
-					return dot(p, n.xyz) + n.w;
-				}*/
+                //float plane = sdPlane(position, float4(0, 1, 0, 0));
+                //result = smooth(result, plane, 0.5);
+
 				return result;
 			}
 
@@ -97,7 +113,7 @@
                 for(int i = 0; i < STEPS; i++)
                 {
                     float3 p = rayOrigin + dO * rayDirection;
-                    dS = getDistance(p);
+                    dS = createScene(p);
                     dO += dS;
 
                     if (dS < SURFACE_DISTANCE || dO > MAX_DISTANCE)
@@ -110,27 +126,33 @@
             //---------------NORMAL----------------------------------
             float3 estimateNormal(float3 p)
             {
-                float2 epsilon = float2(0.01f, 0.f);
-                float3 normal = getDistance(p) - float3(getDistance(p + epsilon.xyy), getDistance(p + epsilon.yxy), getDistance(p + epsilon.yyx));
-                return normalize(normal);
+                float EPSILON = 0.01f;
+
+                return normalize(float3(
+                    createScene(float3(p.x + EPSILON, p.y, p.z)) - createScene(float3(p.x - EPSILON, p.y, p.z)),
+                    createScene(float3(p.x, p.y + EPSILON, p.z)) - createScene(float3(p.x, p.y - EPSILON, p.z)),
+                    createScene(float3(p.x, p.y, p.z + EPSILON)) - createScene(float3(p.x, p.y, p.z - EPSILON))
+                    ));
             }
-
-
 
             //fragment shader
             fixed4 frag(v2f i) : SV_Target
             {
 				fixed4 col = 0;
-                float2 uv = i.uv - 0.5f;
+                float2 uv = i.uv;
                 float3 rayOrigin = i.rayOrigin;
                 float3 rayDirection = normalize(i.hitPos - rayOrigin);
 
+                //uv.x = (2.0 * i.uv.x - 1.0) * ratio;
+                //uv.y = (1.0 - 2.0 * i.uv.y) * fov;
+                
 				float d = RaymarchHit(rayOrigin, rayDirection);
 
                 if (d < MAX_DISTANCE)
                 {
 					float3 p = rayOrigin + rayDirection * d;
 					float3 n = estimateNormal(p);
+                    //float3 viewVec = normalize(rayOrigin - p);
                     col.rbg = n;
                 }
 				else

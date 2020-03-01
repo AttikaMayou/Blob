@@ -38,18 +38,28 @@ public class RayMarchCam : MonoBehaviour
             return;
         }
 
+        float fov = Mathf.Tan((myCamera.fieldOfView * 0.5f) * Mathf.Deg2Rad);
+
         //Set uniform camera
         myMaterial.SetMatrix("CameraToWorldMatrix", myCamera.cameraToWorldMatrix);
-        myMaterial.SetMatrix("CameraFrustrum", CamFrustrum(myCamera));
+        myMaterial.SetMatrix("CameraFrustrum", CamFrustrum(myCamera, fov));
         myMaterial.SetVector("CameraWorldSPace", myCamera.transform.position);
+
+        myMaterial.SetVector("_CamForward", transform.forward);
+        myMaterial.SetVector("_CamRight", transform.right);
+        myMaterial.SetVector("_CamUp", -transform.up);
+
+        myMaterial.SetFloat("fov", fov);
+        myMaterial.SetFloat("Ratio", myCamera.aspect * fov);
 
         testPositionSphere[0] = sphere1.position;
         testPositionSphere[1] = sphere2.position;
 
-        myMaterial.SetVectorArray("PositionsSpheres", testPositionSphere);
+        myMaterial.SetVector("positionsSphere1", sphere1.position);
+        myMaterial.SetVector("positionsSphere2", sphere2.position);
 
         //Destination render texture
-        Graphics.Blit(source, destination, myMaterial, 0);
+        CustomGraphicsBlit(source, destination, myMaterial, 0);
 
         /*
                 myMaterial.SetVector("_CamUp", -transform.up);
@@ -80,12 +90,10 @@ public class RayMarchCam : MonoBehaviour
     }
 
     //Camera.CalculateFrustumCorners
-    private Matrix4x4 CamFrustrum(Camera myCamera)
+    private Matrix4x4 CamFrustrum(Camera myCamera, float fov)
     {
         Matrix4x4 frustrum = Matrix4x4.identity;
         //permet de calculer les 4 corners du frustrum
-        float fov = Mathf.Tan((myCamera.fieldOfView * 0.5f) * Mathf.Deg2Rad);
-
         Vector3 goUp = Vector3.up * fov;
         Vector3 goRight = Vector3.right * fov * myCamera.aspect;
 
@@ -102,5 +110,39 @@ public class RayMarchCam : MonoBehaviour
 
         return frustrum;
     }
+
+    static void CustomGraphicsBlit(RenderTexture source, RenderTexture dest, Material fxMaterial, int passNr)
+    {
+        RenderTexture.active = dest;
+
+        fxMaterial.SetTexture("_MainTex", source);
+
+        GL.PushMatrix();
+        GL.LoadOrtho(); // Note: z value of vertices don't make a difference because we are using ortho projection
+
+        fxMaterial.SetPass(passNr);
+
+        GL.Begin(GL.QUADS);
+
+        // Here, GL.MultitexCoord2(0, x, y) assigns the value (x, y) to the TEXCOORD0 slot in the shader.
+        // GL.Vertex3(x,y,z) queues up a vertex at position (x, y, z) to be drawn.  Note that we are storing
+        // our own custom frustum information in the z coordinate.
+        GL.MultiTexCoord2(0, 0.0f, 0.0f);
+        GL.Vertex3(0.0f, 0.0f, 3.0f); // BL
+
+        GL.MultiTexCoord2(0, 1.0f, 0.0f);
+        GL.Vertex3(1.0f, 0.0f, 2.0f); // BR
+
+        GL.MultiTexCoord2(0, 1.0f, 1.0f);
+        GL.Vertex3(1.0f, 1.0f, 1.0f); // TR
+
+        GL.MultiTexCoord2(0, 0.0f, 1.0f);
+        GL.Vertex3(0.0f, 1.0f, 0.0f); // TL
+
+        GL.End();
+        GL.PopMatrix();
+    }
+
+
 
 }
