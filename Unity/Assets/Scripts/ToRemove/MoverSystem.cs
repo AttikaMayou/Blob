@@ -5,12 +5,13 @@ using Unity.Entities;
 using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Jobs;
+using Unity.Burst;
 
 public class MoverSystem : JobComponentSystem
 {
     //protected override void OnUpdate()
     //{
-    //    Entities.ForEach((ref Translation translation, ref MoveSpeedComponent moveSpeedComponent) =>
+    //    Entities.ForEach((ref Translation translation, ref MoveComponent moveSpeedComponent) =>
     //    {
     //        translation.Value.y += moveSpeedComponent.moveSpeed * Time.DeltaTime;
 
@@ -24,8 +25,9 @@ public class MoverSystem : JobComponentSystem
     //        }
     //    });
     //}
-
-    private struct Job : IJobForEachWithEntity<MoveComponent, Translation>
+    
+    [BurstCompile]
+    private struct MoverJob : IJobForEachWithEntity<MoveComponent, Translation>
     {
         public float deltaTime;
 
@@ -50,6 +52,11 @@ public class MoverSystem : JobComponentSystem
 
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        throw new System.NotImplementedException();
+        var job = new MoverJob()
+        {
+            deltaTime = Time.DeltaTime
+        };
+        
+        return job.Schedule(this, inputDeps);
     }
 }
