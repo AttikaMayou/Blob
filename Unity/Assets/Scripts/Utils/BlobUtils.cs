@@ -8,15 +8,14 @@ namespace Utils
     {
         public static Vector3 GetMouseWorldPosition()
         {
-            Vector3 pos = GetMouseWorldPosition(Input.mousePosition, Camera.main);
-            pos.z = 0f;
+            var pos = GetMouseWorldPosition(Input.mousePosition, Camera.main);
             return pos;
         }
 
         public static Vector3 GetMouseWorldPosition(Vector3 screenPosition, Camera worldCamera)
         {
-            screenPosition.z = worldCamera.transform.position.z;
-            Vector3 pos = worldCamera.ScreenToWorldPoint(screenPosition);
+            //screenPosition.z = worldCamera.transform.position.z;
+            var pos = worldCamera.ScreenToWorldPoint(screenPosition);
             return pos;
         }
     }
