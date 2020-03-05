@@ -5,18 +5,14 @@ using UnityEngine;
 
 [RequireComponent(typeof(Camera))]
 [ExecuteInEditMode]
-public class CameraScript : MonoBehaviour
+public class CameraRayMarching : MonoBehaviour
 {
 
     [Header("Scene infos")]
     [SerializeField] private Camera camera;
-    [SerializeField] private Transform spherePosition1;
-    [SerializeField] private Transform spherePosition2;
-    [SerializeField] private Transform planePosition;
     [SerializeField] private Light light;
 
-    [SerializeField] private List<Transform> spherePositions = new List<Transform>();
-    private Vector4[] positionScale;
+    [SerializeField] private List<Transform> spherePositions;// = new List<Transform>();
     private ToShaderStruct[] toShaderCustomStruct;
     private ComputeBuffer buffer;
     private ComputeBuffer customStructBuffer;
@@ -48,6 +44,7 @@ public class CameraScript : MonoBehaviour
         }
     }
     */
+
     [ImageEffectOpaque]
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
@@ -65,15 +62,15 @@ public class CameraScript : MonoBehaviour
         myMaterial.SetFloat("lightIntensity", light.intensity);
         myMaterial.SetVector("lightPosition", light.transform.position);
 
-        Vector4 sphereAttrib = new Vector4(spherePosition1.position.x, spherePosition1.position.y, spherePosition1.position.z, spherePosition1.localScale.x);
-        Vector4 sphereAttrib2 = new Vector4(spherePosition2.position.x, spherePosition2.position.y, spherePosition2.position.z, spherePosition2.localScale.x);
-        myMaterial.SetVector("spherePosition", sphereAttrib);
-        myMaterial.SetVector("spherePosition2", sphereAttrib2);
-        myMaterial.SetVector("planePosition", planePosition.position);
+    Vector4[] sphereLocation = new Vector4[spherePositions.Count];
+        for (int i = 0; i < sphereLocation.Length; i++)
+            sphereLocation[i] = new Vector4(spherePositions[i].position.x, spherePositions[i].position.y, spherePositions[i].position.z, spherePositions[i].localScale.x);
+        myMaterial.SetInt("numberOfSpheres", sphereLocation.Length);
+        myMaterial.SetVectorArray("sphereLocation", sphereLocation);
 
         Graphics.Blit(source, destination, myMaterial, 0);
     }
-
+    /*
     public void FillBuffers()
     {
         // Deuxième paramètre = taille d'un élément dans le buffer. Ici taille d'un Vector3
@@ -89,6 +86,7 @@ public class CameraScript : MonoBehaviour
         customStructBuffer.SetData(toShaderCustomStruct);
 
     }
+    */
     /*
     public void OnPostRender()
     {

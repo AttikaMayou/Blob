@@ -5,7 +5,6 @@
 		_MainTex("Texture", 2D) = "white" {}
 		_Color("Color", Color) = (1,0,0,1)
 		_CubeMap ("CubeMap", CUBE) = "" {}
-		//_SpecularColor("SpecularColor", SpecularColor) = (1,1,1,1)
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
 	}
@@ -19,6 +18,8 @@
 		{
 
 			CGPROGRAM
+// Upgrade NOTE: excluded shader from DX11, OpenGL ES 2.0 because it uses unsized arrays
+//#pragma exclude_renderers d3d11 gles
 			#pragma target 5.0
 			#pragma vertex vert
 			#pragma fragment frag
@@ -36,14 +37,16 @@
 			uniform float lightIntensity;
 			uniform float3 lightColor;
 
-			uniform float4 spherePosition;
-			uniform float4 spherePosition2;
-			uniform float3 planePosition;
+			uniform int numberOfSpheres;
+			uniform float4 sphereLocation[10];
 
 			uniform float4 _Color;
 			float4 _SpecularColor;
 			uniform float _Metallic;
 			uniform float _Glossiness;
+
+			uniform int isMoving;
+			uniform float3 forwardVector;
 
 			uniform int MAX_MARCHING_STEPS;
 			static const float EPSILON = 0.00001;
@@ -70,6 +73,7 @@
 
 			sampler2D _MainTex;
 			samplerCUBE _CubeMap;
+
 //-----------------------------SDF Functions-------------------------
 			float signedSphere(float3 position, float radius) 
 			{
@@ -113,26 +117,41 @@
 //---------------------------SCENE SDF --------------------------------------
 			float sceneSDF(float3 position) {
 
-				float sphere = signedSphere(position - spherePosition.rgb, spherePosition.w);
+				float sphere = signedSphere(position - sphereLocation[0].xyz, sphereLocation[0].w);
 				float result = sphere;
-				float sphere2 = signedSphere(position - spherePosition2.rgb, spherePosition2.w);
 
 				if (smoothFunctionChoosed == 0)
 				{
 					clamp(k, 0, 1);
-					result = smin(result, sphere2, k);
+					for (int i = 1; i < 10; ++i)
+					{
+						sphere = signedSphere(position - sphereLocation[i].xyz, sphereLocation[0].w);
+						result = smin(result, sphere, k);
+					}
 				}
 				else if (smoothFunctionChoosed == 1)
 				{
-					result = sminExp(result, sphere2, k);
+					for (int i = 1; i < 10; ++i)
+					{
+						sphere = signedSphere(position - sphereLocation[i].xyz, sphereLocation[0].w);
+						result = smin(result, sphere, k);
+					}
 				}
 				else if (smoothFunctionChoosed == 2)
 				{
-					result = sminDreams(result, sphere2, k);
+					for (int i = 1; i < 10; ++i)
+					{
+						sphere = signedSphere(position - sphereLocation[i].xyz, sphereLocation[0].w);
+						result = smin(result, sphere, k);
+					}
 				}
 				else if (smoothFunctionChoosed == 3)
 				{
-					result = sminCubic(result, sphere2, k);
+					for (int i = 1; i < 10; ++i)
+					{
+						sphere = signedSphere(position - sphereLocation[i].xyz, sphereLocation[0].w);
+						result = smin(result, sphere, k);
+					}
 				}
 				
 				return result;
@@ -174,11 +193,12 @@
 
 			float3 calculateLighting(float3 normal, float3 viewDirection)
 			{
+				float3 texCube = texCUBE(_CubeMap, normal).rgb;
 				_SpecularColor = float4(1, 1, 1, 1);
+
+				float3 ambientLighting = 0.2f* _Color;
 				float3 normalDirection = normalize(normal);
 				float3 lightDirection = _WorldSpaceLightPos0.xyz;
-				float3 lightReflectDirection = reflect(-lightDirection, normalDirection);
-				float3 viewReflectDirection = normalize(reflect(-viewDirection, normalDirection));
 				float3 halfDirection = normalize(viewDirection + lightDirection);
 				float NdotL = max(0.0, dot(normalDirection, lightDirection));
 				float NdotH = max(0.0, dot(normalDirection, halfDirection));
@@ -188,20 +208,21 @@
 				float3 attenColor = attenuation * lightColor;
 
 				//Roughness
-				float roughness = 1 - (_Glossiness * _Glossiness);   // 1 - smoothness*smoothness
+				float roughness = 1 - (_Glossiness * _Glossiness);
 				roughness = roughness * roughness;
-				//Diffuse et Spec
-				float3 diffuseColor = _Color.rgb * (1 - _Metallic);
-				float3 specColor = lerp(_SpecularColor.rgb, _Color.rgb, _Metallic * 0.5);
 
-				//GGX NDF
+				//Diffuse
+				float3 diffuseColor = _Color.rgb * (1 - _Metallic);
+				//float3 specColor = lerp(_SpecularColor.rgb, _Color.rgb, _Metallic * 0.5);
+
+				//GGX NDF => Specular
 				float SpecularDistribution = GGXNormalDistribution(roughness, NdotH);
 				SpecularDistribution = SpecularDistribution * SpecularDistribution;
 
-				float3 lightingModel = (diffuseColor + SpecularDistribution);
-				lightingModel *= NdotL;
+				float3 lightingModel = diffuseColor + saturate(SpecularDistribution);
+				lightingModel = (lightingModel * saturate(NdotL));
 
-				float4 finalDiffuse = float4(lightingModel * attenColor, 1);
+				float4 finalDiffuse = float4((ambientLighting + lightingModel * attenColor), 1);
 				return finalDiffuse;
 			}
 
