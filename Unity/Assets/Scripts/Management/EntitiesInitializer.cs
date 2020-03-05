@@ -8,9 +8,11 @@ using UnityEngine;
 
 public class EntitiesInitializer : MonoBehaviour
 {
+    public bool debug;
+    
     //Handle EntitiesInitializer unique instance
     private static EntitiesInitializer _instance;
-    public EntitiesInitializer GetInstance()
+    public static EntitiesInitializer GetInstance()
     {
         return _instance;
     }
@@ -46,9 +48,18 @@ public class EntitiesInitializer : MonoBehaviour
             var _id = -1;
             EntityDirectoryScript.GetInstance().AddEntity(_entityValue, out _id, ball);
             //TODO : handle _id value => do something with it !
+            
+            if(debug) Debug.Log("[EntitiesInitializer] Convert GameObject " + go.name +
+                                " to Entity with id : " + _id);
         }
     }
 
+    public void FillGameObjectsToConvert(GameObject go)
+    {
+        ClearGameObjectsList();
+        _gameObjectsToConvert.Add(go);
+    }
+    
     public void FillGameObjectsToConvert(List<GameObject> list)
     {
         ClearGameObjectsList();
@@ -64,10 +75,10 @@ public class EntitiesInitializer : MonoBehaviour
         }
     }
     
-    public void ClearGameObjectsList()
-    {
-        _gameObjectsToConvert.Clear();
-    }
-    
     #endregion
+    
+    private void ClearGameObjectsList()
+    {
+        _gameObjectsToConvert?.Clear();
+    }
 }
