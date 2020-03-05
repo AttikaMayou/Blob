@@ -9,28 +9,54 @@ using Unity.Entities;
 public class EntityDirectoryScript : MonoBehaviour
 {
     public List<Entity> allEntities;
+    public int activeEntities = 0;
     private Dictionary<int, Entity> _ballsEntities = new Dictionary<int, Entity>();
     private Dictionary<int, Entity> _environmentEntities = new Dictionary<int, Entity>();
 
-    public bool GetBallEntity(int index, out Entity entity)
+    public bool GetEntityByIndex(int index, out Entity entity, bool ball = true)
     {
-        return _ballsEntities.TryGetValue(index, out entity);
+        return ball ? _ballsEntities.TryGetValue(index, out entity) 
+                    : _environmentEntities.TryGetValue(index, out entity);
     }
 
-    public bool GetEnvironmentEntity(int index, out Entity entity)
+    public void GetEntityIndex(Entity entity)
     {
-        return _environmentEntities.TryGetValue(index, out entity);
+        //TODO : find a way to handle entity' index
     }
 
-    public void AddBallEntity(Entity entity, out int id)
+    public void AddEntity(Entity entity, out int id, bool ball = true)
     {
-        id = -1;
+        if(allEntities == null)
+            allEntities = new List<Entity>();
+        
+        if(!allEntities.Contains(entity))
+            allEntities.Add(entity);
+
+        ++activeEntities;
+        
+        id =  ball ? AddEntityToDirectory(entity)
+                   : AddEntityToDirectory(entity, false);
     }
 
-    private int AddBallToDirectory(Entity ball)
+    private int AddEntityToDirectory(Entity entity, bool ball = true)
     {
-        if (_ballsEntities.ContainsValue(ball)) return -1;
-        _ballsEntities.Add(ball.Index, ball);
-        return ball.Index;
+        var id = -1;
+        
+        if (_ballsEntities.ContainsValue(entity)) return id;
+        _ballsEntities.Add(entity.Index, entity);
+        
+        id = activeEntities - 1;
+        
+        return id;
+    }
+
+    public void RemoveEntity(Entity entity, bool ball = true)
+    {
+        activeEntities--;
+        
+        //TODO : set index to -1 on this entity (in the way you handle it)
+        
+        if (allEntities.Contains(entity))
+            allEntities.Remove(entity);
     }
 }
