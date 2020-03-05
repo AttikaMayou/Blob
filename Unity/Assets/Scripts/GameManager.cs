@@ -8,15 +8,15 @@ using Unity.Transforms;
 
 public class GameManager : MonoBehaviour
 {
-    //Gestion de l'instance du GameManager
-    public static GameManager instance;
+    //Handle GameManager unique instance
+    private static GameManager _instance;
     public static GameManager GetInstance()
     {
-        return instance;
+        return _instance;
     }
     private void Awake()
     {
-        instance = this;
+        _instance = this;
     }
     
     private void Start()
@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour
             typeof(Translation),
             typeof(LocalToWorld)
         );
+        
+        //TODO : find how to get these components from game objects converted into an entity
+        //and find a way to add to these fresh converted entities new and custom components (won't be too hard)
     }
 
 }

@@ -8,14 +8,23 @@ using UnityEngine;
 
 public class EntitiesInitializer : MonoBehaviour
 {
-    private static List<GameObject> _gameObjectsToConvert;
+    //Handle EntitiesInitializer unique instance
+    private static EntitiesInitializer _instance;
+    public EntitiesInitializer GetInstance()
+    {
+        return _instance;
+    }
+    
+    private List<GameObject> _gameObjectsToConvert;
 
-    private static Entity _entityValue;
+    private Entity _entityValue;
     private BlobAssetStore _blobAssetStore;
-    private static GameObjectConversionSettings _settings;
+    private GameObjectConversionSettings _settings;
 
     private void Awake()
     {
+        _instance = this;
+        
         _blobAssetStore = new BlobAssetStore();
 
         _settings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, _blobAssetStore);
@@ -27,25 +36,26 @@ public class EntitiesInitializer : MonoBehaviour
     }
     
     
-    #region static methods
+    #region public methods
 
-    public static void ConvertGameObjects(bool ball = true)
+    public void ConvertGameObjects(bool ball = true)
     {
         foreach (var go in _gameObjectsToConvert)
         {
             _entityValue = GameObjectConversionUtility.ConvertGameObjectHierarchy(go, _settings);
-            // if(ball)
-            //     EntityDirectoryScript.
+            var _id = -1;
+            EntityDirectoryScript.GetInstance().AddEntity(_entityValue, out _id, ball);
+            //TODO : handle _id value => do something with it !
         }
     }
 
-    public static void FillGameObjectsToConvert(List<GameObject> list)
+    public void FillGameObjectsToConvert(List<GameObject> list)
     {
         ClearGameObjectsList();
         _gameObjectsToConvert = list;
     }
 
-    public static void FillGameObjectsToConvert(GameObject[] tab)
+    public void FillGameObjectsToConvert(GameObject[] tab)
     {
         ClearGameObjectsList();
         foreach (var go in tab)
@@ -54,7 +64,7 @@ public class EntitiesInitializer : MonoBehaviour
         }
     }
     
-    public static void ClearGameObjectsList()
+    public void ClearGameObjectsList()
     {
         _gameObjectsToConvert.Clear();
     }

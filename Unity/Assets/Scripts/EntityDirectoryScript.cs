@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
@@ -8,6 +9,18 @@ using Unity.Entities;
 
 public class EntityDirectoryScript : MonoBehaviour
 {
+    //Handle EntityDirectory unique instance
+    private static EntityDirectoryScript _instance;
+    public static EntityDirectoryScript GetInstance()
+    {
+        return _instance;
+    }
+
+    private void Awake()
+    {
+        _instance = this;
+    }
+
     public List<Entity> allEntities;
     public int activeEntities = 0;
     private Dictionary<int, Entity> _ballsEntities = new Dictionary<int, Entity>();
@@ -41,9 +54,17 @@ public class EntityDirectoryScript : MonoBehaviour
     private int AddEntityToDirectory(Entity entity, bool ball = true)
     {
         var id = -1;
-        
-        if (_ballsEntities.ContainsValue(entity)) return id;
-        _ballsEntities.Add(entity.Index, entity);
+
+        if (ball)
+        {
+            if (_ballsEntities.ContainsValue(entity)) return id;
+            _ballsEntities.Add(entity.Index, entity);
+        }
+        else
+        {
+            if (_environmentEntities.ContainsValue(entity)) return id;
+            _environmentEntities.Add(entity.Index, entity);
+        }
         
         id = activeEntities - 1;
         
