@@ -1,4 +1,4 @@
-﻿Shader "Margot/RayMarch"
+﻿Shader "Margot/RayMarchFree"
 {
     /*Properties
     {
@@ -12,7 +12,7 @@
         //Blend SrcAlpha OneMinusSrcAlpha;
 
         // No culling or depth
-        Cull Off ZWrite Off ZTest Always
+        //Cull Off ZWrite Off ZTest Always
 
         Pass
         {
@@ -30,8 +30,8 @@
             //vertex to fragment 
             struct v2f
             {
-                float2 uv : TEXCOORD0;
-                float4 vertex : SV_POSITION;
+                float3 wPos : TEXCOORD0;
+                float4 pos : SV_POSITION;
             };
 
             //sampler2D _MainTex;
@@ -40,12 +40,10 @@
             v2f vert (appdata v)
             {
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = v.uv;
+                o.pos = UnityObjectToClipPos(v.vertex);
+                o.wPos = mul(unity_WorldToObject, v.vertex).xyz;
                 return o;
             }
-
-            uniform float4x4 _CamFrustrum;
 
             //---------------raymarching--------------------------
             //how many steps to looking for a hit
@@ -78,11 +76,9 @@
             //fragment shader
             fixed4 frag(v2f i) : SV_Target
             {
-                float3 rayOrigin = _WorldSpaceCameraPos;
-                float3 rayDir = normalize(rayOrigin);
-               // float3 viewDirection = normalize(i.wPos - _WorldSpaceCameraPos);
-                //float3 worldPosition = i.wPos;
-                float depth = 0;// = RaymarchHit(worldPosition, viewDirection);
+                float3 viewDirection = normalize(i.wPos - _WorldSpaceCameraPos);
+                float3 worldPosition = i.wPos;
+                float depth = RaymarchHit(worldPosition, viewDirection);
 
                 if(depth != 0)
                     return fixed4(1, 0, 0, 1);
