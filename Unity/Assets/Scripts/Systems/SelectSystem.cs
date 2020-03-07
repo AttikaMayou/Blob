@@ -5,19 +5,22 @@ using Unity.Transforms;
 using UnityEngine;
 using Utils;
 
-//Author : Attika
-
 namespace Systems
 {
     public class SelectSystem : ComponentSystem
     {
         private float3 _mousePos;
-        private float _tolerance = 1f;
+        private readonly float _tolerance = 1f;
         
         protected override void OnUpdate()
         {
-            if (Input.GetMouseButton(0))
+              if (Input.GetMouseButton(0))
             {
+                Entities.ForEach((Entity entity, ref BlobUnitSelected selected) =>
+                {
+                    PostUpdateCommands.RemoveComponent<BlobUnitSelected>(entity);
+                });
+
                 _mousePos = BlobUtils.GetMouseWorldPosition();
                 Debug.Log(_mousePos);
                 
@@ -47,12 +50,26 @@ namespace Systems
 
             if (Input.GetMouseButtonDown(2))
             {
+                var minDistance = 1f;
+                var minDistanceTab = new float[] { 0f };
+                var entitiesCountPerRing = new int[] { 0 };
+                var initialize =
+                    BlobUtils.InitializeRingMovementSystem(minDistance, out minDistanceTab, out entitiesCountPerRing);
+                if (initialize == -1) return;
+                float3 targetPosition = BlobUtils.GetMouseWorldPosition();
+                var movePositionList =
+                    BlobUtils.GetPositionListAround(targetPosition, minDistanceTab, entitiesCountPerRing);
+                var positionIndex = 0;
+
                 Entities.WithAll<BlobUnitSelected>().ForEach((Entity entity, ref BlobUnitMovement movement) =>
-                    {
-                        movement.position = BlobUtils.GetMouseWorldPosition();
-                        movement.move = true;
-                    });
+                {
+                    movement.position = movePositionList[positionIndex];
+                    positionIndex = (positionIndex + 1) % movePositionList.Count;
+                    movement.move = true;
+                });
+
             }
+
         }
     }
 }

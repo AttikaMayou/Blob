@@ -6,8 +6,9 @@ using Unity.Entities;
 namespace Components
 {
     [Serializable]
+    [GenerateAuthoringComponent]
     public struct BlobUnitSelected : IComponentData
     {
-        //need stuff here
+        public bool selected;
     }
 }

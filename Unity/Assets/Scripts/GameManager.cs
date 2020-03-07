@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Entities;
 using Unity.Transforms;
+using Utils;
 
 //Author : Attika
 
@@ -21,13 +22,13 @@ public class GameManager : MonoBehaviour
     
     private void Start()
     {
-        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        var entityManager = BlobUtils.GetCurrentEntityManager();
         //
         // var ballsArchetype = entityManager.CreateArchetype(
         //     typeof(Translation),
         //     typeof(LocalToWorld)
         // );
-        
+
         //TODO : find how to get these components from game objects converted into an entity
         //and find a way to add to these fresh converted entities new and custom components (won't be too hard)
     }
