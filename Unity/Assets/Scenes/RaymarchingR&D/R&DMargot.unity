@@ -414,7 +414,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myMaterial: {fileID: 2100000, guid: 03b283a12b8214e47b51d8050cc3e0fc, type: 2}
   moving: 0
-  trans: {x: 0, y: 0, z: 0}
 --- !u!1 &404130917
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,7 +987,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1223764256}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.353, y: 2.195, z: 0.352}
+  m_LocalPosition: {x: -0.37, y: 2.195, z: 0.352}
   m_LocalScale: {x: 0.24746498, y: 0.24746498, z: 0.24746498}
   m_Children: []
   m_Father: {fileID: 0}
