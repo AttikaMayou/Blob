@@ -5,6 +5,7 @@
 		_MainTex("Texture", 2D) = "white" {}
 		_Color("Color", Color) = (1,0,0,1)
 		_CubeMap ("CubeMap", CUBE) = "" {}
+		_AmbiantLight("AmbiantLight", Range(0,1)) = 0.3
 		_Glossiness ("Smoothness", Range(0,1)) = 0.5
 		_Metallic ("Metallic", Range(0,1)) = 0.0
 	}
@@ -44,6 +45,7 @@
 			float4 _SpecularColor;
 			uniform float _Metallic;
 			uniform float _Glossiness;
+			uniform float _AmbiantLight;
 
 			uniform int isMoving;
 			uniform float3 forwardVector;
@@ -125,7 +127,7 @@
 					clamp(k, 0, 1);
 					for (int i = 1; i < 10; ++i)
 					{
-						sphere = signedSphere(position - sphereLocation[i].xyz, sphereLocation[0].w);
+						sphere = signedSphere(position - sphereLocation[i].xyz, sphereLocation[i].w);
 						result = smin(result, sphere, k);
 					}
 				}
@@ -196,7 +198,7 @@
 				float3 texCube = texCUBE(_CubeMap, normal).rgb;
 				_SpecularColor = float4(1, 1, 1, 1);
 
-				float3 ambientLighting = 0.2f* _Color;
+				float3 ambientLighting = _AmbiantLight * _Color;
 				float3 normalDirection = normalize(normal);
 				float3 lightDirection = _WorldSpaceLightPos0.xyz;
 				float3 halfDirection = normalize(viewDirection + lightDirection);
