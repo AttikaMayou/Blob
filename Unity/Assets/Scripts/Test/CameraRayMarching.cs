@@ -62,7 +62,7 @@ public class CameraRayMarching : MonoBehaviour
         myMaterial.SetFloat("lightIntensity", light.intensity);
         myMaterial.SetVector("lightPosition", light.transform.position);
 
-    Vector4[] sphereLocation = new Vector4[spherePositions.Count];
+        Vector4[] sphereLocation = new Vector4[spherePositions.Count];
         for (int i = 0; i < sphereLocation.Length; i++)
             sphereLocation[i] = new Vector4(spherePositions[i].position.x, spherePositions[i].position.y, spherePositions[i].position.z, spherePositions[i].localScale.x);
         myMaterial.SetInt("numberOfSpheres", sphereLocation.Length);

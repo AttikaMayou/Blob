@@ -39,7 +39,9 @@
 			uniform float3 lightColor;
 
 			uniform int numberOfSpheres;
-			uniform float4 sphereLocation[10];
+			uniform float4 sphereLocation[40];
+
+			uniform sampler2D _CameraDepthTexture;
 
 			uniform float4 _Color;
 			float4 _SpecularColor;
@@ -125,7 +127,7 @@
 				if (smoothFunctionChoosed == 0)
 				{
 					clamp(k, 0, 1);
-					for (int i = 1; i < 10; ++i)
+					for (int i = 1; i < numberOfSpheres; ++i)
 					{
 						sphere = signedSphere(position - sphereLocation[i].xyz, sphereLocation[i].w);
 						result = smin(result, sphere, k);
@@ -133,7 +135,7 @@
 				}
 				else if (smoothFunctionChoosed == 1)
 				{
-					for (int i = 1; i < 10; ++i)
+					for (int i = 1; i < numberOfSpheres; ++i)
 					{
 						sphere = signedSphere(position - sphereLocation[i].xyz, sphereLocation[0].w);
 						result = smin(result, sphere, k);
@@ -141,7 +143,7 @@
 				}
 				else if (smoothFunctionChoosed == 2)
 				{
-					for (int i = 1; i < 10; ++i)
+					for (int i = 1; i < numberOfSpheres; ++i)
 					{
 						sphere = signedSphere(position - sphereLocation[i].xyz, sphereLocation[0].w);
 						result = smin(result, sphere, k);
@@ -149,7 +151,7 @@
 				}
 				else if (smoothFunctionChoosed == 3)
 				{
-					for (int i = 1; i < 10; ++i)
+					for (int i = 1; i < numberOfSpheres; ++i)
 					{
 						sphere = signedSphere(position - sphereLocation[i].xyz, sphereLocation[0].w);
 						result = smin(result, sphere, k);
@@ -249,7 +251,11 @@
 				myUv.x = (2.0 * i.uv.x - 1.0) * _Aspect * fov;
 				myUv.y = (1.0 - 2.0 * i.uv.y) * fov;
 				float3 rayDirection = normalize(1.0 * _CamForward + _CamRight * myUv.x + _CamUp * myUv.y);
-				float t = rayMarching(rayOrigin, rayDirection, _ProjectionParams.y, _ProjectionParams.z);
+
+				//float depth = LinearEyeDepth(tex2D(_CameraDepthTexture, myUv).r);
+				//depth *= length(rayDirection);
+
+				float t = rayMarching(rayOrigin, rayDirection, _ProjectionParams.y, _ProjectionParams.z);// *depth);
 
 				float attenuation;
 				if (t < _ProjectionParams.z) 
