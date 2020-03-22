@@ -1,22 +1,22 @@
-﻿Shader "Arthur/Metaballs"
+﻿Shader "PeerPlay/Raymarching2"
 {
-	Properties
-	{
-		_MainTex("Texture", 2D) = "white" {}
-	}
-		SubShader
-	{
-		// No culling or depth
-		Cull Off ZWrite Off ZTest Always
+    Properties
+    {
+        _MainTex ("Texture", 2D) = "white" {}
+    }
+    SubShader
+    {
+        // No culling or depth
+        Cull Off ZWrite Off ZTest Always
 
-		Pass
-		{
-			CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
+        Pass
+        {
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
 			#pragma target 3.0
 
-			#include "UnityCG.cginc"
+            #include "UnityCG.cginc"
 			#include "DistanceFunctions.cginc"
 
 			sampler2D _MainTex;
@@ -29,7 +29,7 @@
 			uniform float _maxDistance;
 			uniform int _maxIterations;
 			uniform float _accuracy;
-
+			
 
 			//Light
 			uniform float3 _lightDir;
@@ -60,31 +60,35 @@
 			//SDF
 			uniform float4 _spheres[8];
 			uniform float _sphereSmooth;
+			uniform float _degreRotate;
+			uniform float _rotationSpeed;
+
+			uniform fixed4 _planeColor;
 
 			//Input
-			struct appdata
-			{
-				float4 vertex : POSITION;
-				float2 uv : TEXCOORD0;
-			};
+            struct appdata
+            {
+                float4 vertex : POSITION;
+                float2 uv : TEXCOORD0;
+            };
 
 			//Output
-			struct v2f
-			{
-				float2 uv : TEXCOORD0;
-				float4 vertex : SV_POSITION;
+            struct v2f
+            {
+                float2 uv : TEXCOORD0;
+                float4 vertex : SV_POSITION;
 				float3 ray : TEXCOORD1;
-			};
-
+            };
+			
 			//Vertex
-			v2f vert(appdata v)
-			{
-				v2f o;
+            v2f vert (appdata v)
+            {
+                v2f o;
 				half index = v.vertex.z;
 				v.vertex.z = 0;
 
-				o.vertex = UnityObjectToClipPos(v.vertex);
-				o.uv = v.uv;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv = v.uv;
 
 				o.ray = _CamFrustum[(int)index].xyz;
 
@@ -92,8 +96,8 @@
 
 				o.ray = mul(_CamToWorld, o.ray);
 
-				return o;
-			}
+                return o;
+            }
 
 			float3 RotateY(float3 v, float degree)
 			{
@@ -104,39 +108,38 @@
 				return float3(cosY * v.x - sinY * v.z, v.y, sinY * v.x + cosY * v.z);
 			}
 
-			float4 distanceField(float3 p, float depth)
+			float4 distanceField(float3 p, float depth) 
 			{
-				//Rotation
-				float speed = 0.3;
-				float3 spherePos = _spheres[0].xyz + float3(2 * sin(_Time.y * speed), 3 * sin(_Time.y * speed), 1.5 * cos(_Time.y * speed));
+				//float4 distanceScene = float4(_planeColor.rgb, depth - length(p - _camPos));
 
 				//Scale
-				float PI = 3.14159265f;
-				float sphereSize = _spheres[0].w + 3 * (0.5 + 0.5 * sin(2 * PI * 0.3 + (p.y - _spheres[0].y) / _spheres[0].w));
+				//float PI = 3.14159265f;
+				//float sphereSize = _spheres[0].w + 3 * (0.5 + 0.5 * sin(2 * PI * 0.3 + (p.y - _spheres[0].y) / _spheres[0].w));
 
 				//Distance
-				float4 sphereAdd = float4(_sphereColor[0].rgb, sdSphere(p - spherePos, sphereSize));
+				float4 sphereAdd = float4(_sphereColor[0].rgb, sdSphere(p - _spheres[0].xyz, _spheres[0].w));
 				float4 result = sphereAdd;
 
 				for (int i = 1; i < 8; i++)
 				{
 					//Rotation
-					speed = i * 0.3;
-					spherePos = _spheres[i].xyz + float3(2 * i * sin(_Time.y * speed), 3 * i * sin(_Time.y * speed), 1.5 * i * cos(_Time.y * speed));
-
+					//speed = i * _rotationSpeed;
+					//float3 spherePos = _spheres[i].xyz + float3(2 * i * sin(_Time.y * speed), 3 * i * sin(_Time.y * speed), 1.5 * i * cos(_Time.y * speed));
+				
 					//Scale
-					sphereSize = _spheres[i].w + 3 * (0.5 + 0.5 * sin(2 * PI * _Time.y * 0.3 + (p.y - _spheres[i].y) / 3));
-
+					//float PI = 3.14159265f;
+					//float sphereSize = _spheres[i].w + 3 * (0.5 + 0.5 * sin(2 * PI * _Time.y * 0.3 + (p.y - _spheres[i].y) / 3));
+				
 					//Distance
-					sphereAdd = float4(_sphereColor[i].rgb, sdSphere(RotateY(p, 45.0 * i) - spherePos, sphereSize));
-
+					sphereAdd = float4(_sphereColor[i].rgb, sdSphere(p - _spheres[i].xyz, _spheres[i].w));				
+				
 					result = opUS(result, sphereAdd, _sphereSmooth);
 				}
 
 				return result;
 			}
 
-			float3 getNormal(float3 p, float depth)
+			float3 getNormal(float3 p, float depth) 
 			{
 				const float2 offset = float2(0.001, 0);
 				float3 n = float3(
@@ -197,7 +200,7 @@
 				return (1.0 - ao * _aoIntensity);
 			}
 
-			float3 Shading(float3 p, float3 n, fixed3 c, float depth)
+			float3 Shading(float3 p, float3 n, fixed3 c, float depth) 
 			{
 				float3 result;
 
@@ -213,7 +216,7 @@
 
 				//Ambant occlusion
 				float ao = AmbiantOcclusion(p, n, depth);
-
+				
 				result = color * light * shadow * ao;
 
 				return result;
@@ -309,8 +312,8 @@
 				}
 
 				return fixed4(col * (1.0 - result.w) + result.xyz * result.w ,1.0);
-			}
-			ENDCG
-		}
-	}
+            }
+            ENDCG
+        }
+    }
 }
