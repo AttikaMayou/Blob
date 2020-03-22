@@ -15,17 +15,17 @@ namespace Systems
 
         protected override void OnUpdate()
         {
-            if (Input.GetMouseButtonDown(2))
-            {
-                float3 targetPos = BlobUtils.GetMouseWorldPosition();
-                
-                Entities.WithAll<BlobUnitSelected>().ForEach((Entity entity, ref BlobUnitMovement movement) =>
-                {
-                    movement.position = movement.position + targetPos * 100000;
-                    movement.move = true;
-                });
-
-            }
+            // if (Input.GetMouseButtonDown(2))
+            // {
+            //     float3 targetPos = BlobUtils.GetMouseWorldPosition();
+            //     
+            //     Entities.WithAll<BlobUnitSelected>().ForEach((Entity entity, ref BlobUnitMovement movement) =>
+            //     {
+            //         movement.position = movement.position + targetPos * 100000;
+            //         movement.move = true;
+            //     });
+            //
+            // }
             
         }
     }

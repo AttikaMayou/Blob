@@ -4,6 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using Unity.Physics;
 using Unity.Physics.Systems;
+using Unity.Transforms;
 using RaycastHit = Unity.Physics.RaycastHit;
 
 //Author : Attika
@@ -52,40 +53,46 @@ namespace Utils
 
         private static Vector3 GetMouseWorldPosition(Vector3 screenPosition, Camera worldCamera)
         {
-            //screenPosition.z = worldCamera.transform.position.z;
             var pos = worldCamera.ScreenToWorldPoint(screenPosition);
+            //pos.z = worldCamera.transform.position.z;
             return pos;
         }
         
         public static Vector3 GetMouseWorldPosition()
         {
             var pos = GetMouseWorldPosition(Input.mousePosition, Camera.main);
-            pos.z = 0.0f;
+            Debug.Log("2) Mouse pos : " + Input.mousePosition);
+            Debug.Log("3) Converted in world pos : " + pos);
             return pos;
         }
 
         public static float3 GetMousePositionInPhysicWorld()
         {
-            var input = RayCastFromMouse();
-            //TODO : write this function
-            return float3.zero;
+            var hit = GetHitFromMouse(out var isThereEntity);
+            return isThereEntity ?  hit.Position : float3.zero;
+        }
+
+        public static float3 GetMousePositionInPhysicWorld(out bool isThereEntity)
+        {
+            var hit = GetHitFromMouse(out isThereEntity);
+            return isThereEntity ?  hit.Position : float3.zero;
         }
         #endregion
         
         #region raycast methods
-        public static Entity RayCastFromMouse()
+        public static Entity RayCastFromMouse(out bool isThereEntity)
         {
-            var hit = GetHitFromMouse(out var haveHit);
-            return haveHit ? GetCurrentPhysicsWorld().Bodies[hit.RigidBodyIndex].Entity : Entity.Null;
+            var hit = GetHitFromMouse(out isThereEntity);
+            return isThereEntity ? GetCurrentPhysicsWorld().Bodies[hit.RigidBodyIndex].Entity : Entity.Null;
         }
         
-        public static Entity RayCast(float3 rayFrom, float3 rayTo)
+        public static Entity RayCast(float3 rayFrom, float3 rayTo, out bool haveHit)
         {
-            var hit = GetHitFromInWorld(rayTo, rayFrom, out var haveHit);
+            var hit = GetHitFromInWorld(rayTo, rayFrom, out haveHit);
             return haveHit ? GetCurrentPhysicsWorld().Bodies[hit.RigidBodyIndex].Entity : Entity.Null;
         }
 
-        private static RaycastHit GetHitFromMouse(out bool haveHit)
+        public static RaycastHit GetHitFromMouse(out bool haveHit)
         {
             var input = RayFromMouseInWorld();
 
@@ -107,7 +114,7 @@ namespace Utils
             
             var input = new RaycastInput
             {
-                End = GetMouseWorldPosition() + new Vector3(0.0f, 0.0f, -100.0f),
+                End = Input.mousePosition + new Vector3(0.0f, 0.0f, -100.0f),
                 Filter = new CollisionFilter
                 {
                     BelongsTo = ~0u, // bit mask (which layers this collider belongs to)
@@ -162,6 +169,16 @@ namespace Utils
         #endregion
        
         #region movement methods
+
+        public static void MoveEntitiesTo(float3 targetPos)
+        {
+            Debug.Log("move entities to " + targetPos);
+            // calculate new position for each entity with 'MovementComponent' 
+            // add the new position to each entity's current position 
+            // multiply it with Time.deltaTime to do it smoothly
+            // maybe move this method onto 'RayCastSelectSystem' to burst compile it
+        }
+
         public static int InitializeRingMovementSystem(float dist, out float[] minDistance, out int[] entitiesPerRing)
         {
             var i = 0;

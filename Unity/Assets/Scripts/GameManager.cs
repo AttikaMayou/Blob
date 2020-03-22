@@ -23,11 +23,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         var entityManager = BlobUtils.GetCurrentEntityManager();
-        //
-        // var ballsArchetype = entityManager.CreateArchetype(
-        //     typeof(Translation),
-        //     typeof(LocalToWorld)
-        // );
 
         //TODO : find how to get these components from game objects converted into an entity
         //and find a way to add to these fresh converted entities new and custom components (won't be too hard)
