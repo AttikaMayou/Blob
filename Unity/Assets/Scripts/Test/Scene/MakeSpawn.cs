@@ -36,7 +36,7 @@ public class MakeSpawn : MonoBehaviour
         {
             sphere[index].SetActive(true);
             index++;
-            spheres.text = index.ToString();
+            spheres.text = "Number of spheres : " + index.ToString();
         }
 
         //FPS
@@ -49,7 +49,7 @@ public class MakeSpawn : MonoBehaviour
             dt -= 1f / updateRate;
         }
 
-        FPS.text = fps.ToString("F1");
+        FPS.text = "FPS : " + fps.ToString("F1");
 
     }
 }

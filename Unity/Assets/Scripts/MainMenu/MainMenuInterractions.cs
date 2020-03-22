@@ -19,4 +19,10 @@ public class MainMenuInterractions : MonoBehaviour
     {
         SceneManager.LoadScene("Raymarching2");
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
+    }
 }
