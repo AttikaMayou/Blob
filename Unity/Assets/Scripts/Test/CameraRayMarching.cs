@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 [RequireComponent(typeof(Camera))]
@@ -26,6 +27,12 @@ public class CameraRayMarching : MonoBehaviour
     [Range(0, 3)]
     [SerializeField] private int ChooseSmoothFunction;
     [SerializeField] private float smoothIntensity;
+
+    //---------------------------POUR DEMO---------------------------------------
+    [SerializeField] private Slider smooth;
+
+
+
     /*
     void Start()
     {
@@ -94,6 +101,11 @@ public class CameraRayMarching : MonoBehaviour
         this.buffer.Dispose();
         this.customStructBuffer.Dispose();
     }*/
+
+    public void changeSmooth()
+    {
+        smoothIntensity = smooth.value;
+    }
 
 }
 

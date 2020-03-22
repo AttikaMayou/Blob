@@ -24,6 +24,7 @@
 			#pragma target 5.0
 			#pragma vertex vert
 			#pragma fragment frag
+#include "UnityCG.cginc"
 
 			uniform float3 _CamForward;
 			uniform float3 _CamRight;
@@ -252,10 +253,10 @@
 				myUv.y = (1.0 - 2.0 * i.uv.y) * fov;
 				float3 rayDirection = normalize(1.0 * _CamForward + _CamRight * myUv.x + _CamUp * myUv.y);
 
-				//float depth = LinearEyeDepth(tex2D(_CameraDepthTexture, myUv).r);
-				//depth *= length(rayDirection);
+				float depth = LinearEyeDepth(tex2D(_CameraDepthTexture, myUv).r);
+				depth *= length(rayDirection);
 
-				float t = rayMarching(rayOrigin, rayDirection, _ProjectionParams.y, _ProjectionParams.z);// *depth);
+				float t = rayMarching(rayOrigin, rayDirection, _ProjectionParams.y, _ProjectionParams.z);// -depth);
 
 				float attenuation;
 				if (t < _ProjectionParams.z) 
