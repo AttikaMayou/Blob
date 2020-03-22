@@ -10,7 +10,6 @@ public class SphereState : MonoBehaviour
     private float threshold = 0.01f;
     Vector3 lastPos = new Vector3(0, 0, 0);
     Vector3 forwardVector = new Vector3(0, 0, 0);
-    public Vector3 trans;
 
     // Update is called once per frame
     void Update()
@@ -20,6 +19,7 @@ public class SphereState : MonoBehaviour
         {
             moving = 1;
             myMaterial.SetInt("isMoving", moving);
+            Debug.Log(lastPos - curPos);
         }
         else
         {
