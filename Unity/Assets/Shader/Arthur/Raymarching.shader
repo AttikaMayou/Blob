@@ -63,8 +63,6 @@
 			uniform float _degreRotate;
 			uniform float _rotationSpeed;
 
-			uniform fixed4 _planeColor;
-
 			//Input
             struct appdata
             {

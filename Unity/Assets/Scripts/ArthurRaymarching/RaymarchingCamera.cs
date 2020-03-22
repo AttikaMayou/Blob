@@ -75,9 +75,6 @@ public class RaymarchingCamera : SceneViewFilter
     [Header("SDF")]
     public float _sphereSmooth;
 
-    public GameObject _plane;
-
-
     [ImageEffectOpaque]
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
@@ -106,11 +103,6 @@ public class RaymarchingCamera : SceneViewFilter
                 _sphereColor[i] = _sphereGradiant.Evaluate(1f / 8 * i);
             }
         }
-
-        if (_plane)
-            planeColor = _plane.GetComponent<MeshRenderer>().sharedMaterial.color;
-        else
-            planeColor = Color.white;
 
         // Camera
         _raymarchMaterial.SetMatrix("_CamFrustum", GetFrustumCorners(_camera));
@@ -145,7 +137,6 @@ public class RaymarchingCamera : SceneViewFilter
         //Color
         _raymarchMaterial.SetColorArray("_sphereColor", _sphereColor);
         _raymarchMaterial.SetFloat("_colorIntensity", _colorIntensity);
-        _raymarchMaterial.SetColor("_planeColor", planeColor);
 
         //SDF
         _raymarchMaterial.SetVectorArray("_spheres", _spheresPos);
