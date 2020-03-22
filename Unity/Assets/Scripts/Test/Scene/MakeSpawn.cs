@@ -11,7 +11,6 @@ public class MakeSpawn : MonoBehaviour
     [SerializeField] private GameObject start;
     [SerializeField] private Text FPS;
     [SerializeField] private Text spheres;
-    [SerializeField] private Light sunlight;
 
     int frameCount = 0;
     float dt = 0f;
@@ -33,7 +32,7 @@ public class MakeSpawn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && index < sphere.Count)
+        if (Input.GetKeyDown(KeyCode.Return) && index < sphere.Count)
         {
             sphere[index].SetActive(true);
             index++;
@@ -52,10 +51,5 @@ public class MakeSpawn : MonoBehaviour
 
         FPS.text = fps.ToString("F1");
 
-    }
-    public void rotateLight(float newRotation)
-    {
-        Quaternion target = Quaternion.Euler(0, newRotation, 0);
-        sunlight.transform.rotation = Quaternion.Slerp(sunlight.transform.rotation, target, Time.deltaTime * 2f);
     }
 }

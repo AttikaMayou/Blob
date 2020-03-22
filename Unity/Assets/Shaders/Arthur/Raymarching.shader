@@ -30,7 +30,6 @@
 			uniform int _maxIterations;
 			uniform float _accuracy;
 			
-
 			//Light
 			uniform float3 _lightDir;
 			uniform float3 _lightCol;
@@ -51,17 +50,19 @@
 			uniform float _reflectionIntensity;
 			uniform float _envReflectionIntensity;
 			uniform samplerCUBE _reflectionCube;
-
-			//Color
-			uniform fixed4 _groundColor;
-			uniform fixed4 _sphereColor[8];
-			uniform float _colorIntensity;
-
+			
 			//SDF
-			uniform float4 _spheres[8];
+			uniform int _nbSphere;
+			uniform float4 _spheres[41];
 			uniform float _sphereSmooth;
 			uniform float _degreRotate;
 			uniform float _rotationSpeed;
+
+			//Color
+			uniform fixed4 _groundColor;
+			uniform fixed4 _sphereColor[41];
+			uniform float _colorIntensity;
+
 
 			//Input
             struct appdata
@@ -97,37 +98,16 @@
                 return o;
             }
 
-			float3 RotateY(float3 v, float degree)
-			{
-				float rad = 0.0174532925 * degree;
-				float cosY = cos(rad);
-				float sinY = sin(rad);
-
-				return float3(cosY * v.x - sinY * v.z, v.y, sinY * v.x + cosY * v.z);
-			}
-
 			float4 distanceField(float3 p, float depth) 
 			{
 				//float4 distanceScene = float4(_planeColor.rgb, depth - length(p - _camPos));
-
-				//Scale
-				//float PI = 3.14159265f;
-				//float sphereSize = _spheres[0].w + 3 * (0.5 + 0.5 * sin(2 * PI * 0.3 + (p.y - _spheres[0].y) / _spheres[0].w));
 
 				//Distance
 				float4 sphereAdd = float4(_sphereColor[0].rgb, sdSphere(p - _spheres[0].xyz, _spheres[0].w));
 				float4 result = sphereAdd;
 
-				for (int i = 1; i < 8; i++)
+				for (int i = 1; i < 41; i++)
 				{
-					//Rotation
-					//speed = i * _rotationSpeed;
-					//float3 spherePos = _spheres[i].xyz + float3(2 * i * sin(_Time.y * speed), 3 * i * sin(_Time.y * speed), 1.5 * i * cos(_Time.y * speed));
-				
-					//Scale
-					//float PI = 3.14159265f;
-					//float sphereSize = _spheres[i].w + 3 * (0.5 + 0.5 * sin(2 * PI * _Time.y * 0.3 + (p.y - _spheres[i].y) / 3));
-				
 					//Distance
 					sphereAdd = float4(_sphereColor[i].rgb, sdSphere(p - _spheres[i].xyz, _spheres[i].w));				
 				

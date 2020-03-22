@@ -10,6 +10,6 @@ public class ChangeMaterialParam : MonoBehaviour
 
     public void changeSmooth()
     {
-        shader.
+        //shader.
     }
 }

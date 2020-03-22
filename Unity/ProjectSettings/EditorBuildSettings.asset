@@ -6,6 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Scenes/MainMenu.unity
+    guid: 3791c4fbc9f2c90478e3c392df1e76c7
+  - enabled: 1
+    path: Assets/Scenes/ECS/ECS_MainScene.unity
+    guid: e6bd384013f8b9f48ab073a34c7856b0
+  - enabled: 1
+    path: Assets/Scenes/RaymarchingR&D/Raymarching1.unity
+    guid: 9d891d67ea8d4ef45bf5be530f48a62a
+  - enabled: 1
+    path: Assets/Scenes/RaymarchingR&D/Raymarching2.unity
+    guid: f94dad88768f89143a686baab734d2bc
   m_configObjects: {}
