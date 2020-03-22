@@ -486,7 +486,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 512333932}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.271, y: 0.759, z: 0.248}
+  m_LocalPosition: {x: 1.92, y: 0.759, z: 0.248}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -523,8 +523,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d289dd4de603b24fbf4d0ddaac96c6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myShader: {fileID: 4800000, guid: e978b0b560595a9408655ddffb7575ff, type: 3}
+  myShader: {fileID: 4800000, guid: 0634ec9b90938934ea28ca6f02d94cea, type: 3}
   myMaterial: {fileID: 2100000, guid: 03b283a12b8214e47b51d8050cc3e0fc, type: 2}
+  cam: {fileID: 1223287658}
   p1: {fileID: 512333936}
   p2: {fileID: 453873293}
   p3: {fileID: 371155753}
@@ -587,7 +588,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1223287655}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5471075, y: 0.65900147, z: -0.75090945}
+  m_LocalPosition: {x: 0.05, y: 0.65900147, z: -0.75090945}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
