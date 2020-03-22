@@ -70,12 +70,10 @@ public class RaymarchingCamera : SceneViewFilter
     public Gradient _sphereGradiant;
     private Color[] _sphereColor = new Color[8];
     [Range(0, 4)] public float _colorIntensity;
+    private Color planeColor;
 
     [Header("SDF")]
     public float _sphereSmooth;
-
-    public GameObject _plane;
-
 
     [ImageEffectOpaque]
     void OnRenderImage(RenderTexture source, RenderTexture destination)
@@ -87,14 +85,24 @@ public class RaymarchingCamera : SceneViewFilter
         }
 
         //Set spheres property
-        for (int i = 0; i < 8; i++)
+        if(_spheres.Count == 0)
         {
-            Vector3 pos = _spheres[i].transform.position;
-            _spheresPos[i] = new Vector4(pos.x, pos.y, pos.z, _spheres[i].transform.localScale.x); 
-            _sphereColor[i] = _sphereGradiant.Evaluate(1f / 8 * i);
+            for (int i = 0; i < 8; i++)
+            {
+                Vector3 pos = Vector3.zero;
+                _spheresPos[i] = new Vector4(pos.x, pos.y, pos.z, 4.0f);
+                _sphereColor[i] = _sphereGradiant.Evaluate(1f / 8 * i);
+            }
         }
-
-        Color planeColor = _plane.GetComponent<MeshRenderer>().sharedMaterial.color;
+        else
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                Vector3 pos = _spheres[i].transform.position;
+                _spheresPos[i] = new Vector4(pos.x, pos.y, pos.z, _spheres[i].transform.localScale.x); 
+                _sphereColor[i] = _sphereGradiant.Evaluate(1f / 8 * i);
+            }
+        }
 
         // Camera
         _raymarchMaterial.SetMatrix("_CamFrustum", GetFrustumCorners(_camera));
@@ -129,7 +137,6 @@ public class RaymarchingCamera : SceneViewFilter
         //Color
         _raymarchMaterial.SetColorArray("_sphereColor", _sphereColor);
         _raymarchMaterial.SetFloat("_colorIntensity", _colorIntensity);
-        _raymarchMaterial.SetColor("_planeColor", planeColor);
 
         //SDF
         _raymarchMaterial.SetVectorArray("_spheres", _spheresPos);
