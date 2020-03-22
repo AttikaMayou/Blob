@@ -1,4 +1,4 @@
-﻿Shader "PeerPlay/Raymarching2"
+﻿Shader "Arthur/Raymarching"
 {
     Properties
     {
