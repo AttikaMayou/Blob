@@ -1,4 +1,5 @@
-﻿using Components;
+﻿using System.Collections.Generic;
+using Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -36,11 +37,19 @@ namespace Systems
                 
                 var forward = Input.mousePosition + new Vector3(0.0f, 0.0f, -100.0f);
                 Debug.DrawLine(BlobUtils.GetMousePositionInPhysicWorld(), forward, Color.magenta, 10);
-                
+
                 if (haveHit)
                 {
-                    BlobUtils.MoveEntitiesTo(position);
+                    var targetPositions = BlobUtils.MoveEntitiesTo(position, 20, 5, 10f);
+                    var positionIndex = 0;
+                    Entities.WithAll<BlobUnitMovement>().ForEach((Entity entity, ref BlobUnitMovement blobUnitMovement) =>
+                    {
+                        blobUnitMovement.position = targetPositions[positionIndex];
+                        positionIndex = (positionIndex + 1) % targetPositions.Count;
+                        blobUnitMovement.move = true;
+                    });
                 }
+
                 Debug.Log("5) end of process");
             }
         }

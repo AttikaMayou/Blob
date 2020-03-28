@@ -21,6 +21,12 @@ namespace Systems
             {
                 if (!movement.move) return;
                 
+                //Peut-être changer cela : 
+                //Une boule est maîtresse des autres
+                //Et les autres suivent en gardant toujours la même distance
+                //entre elles quoi qu'il arrive
+                //plutôt que d'envoyer toutes les positions de toutes les boules 
+                
                 const float reachedPositionDistance = 1f;
                 
                 if (math.distance(translation.Value, movement.position) > reachedPositionDistance)

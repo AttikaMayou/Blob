@@ -170,8 +170,14 @@ namespace Utils
        
         #region movement methods
 
-        public static void MoveEntitiesTo(float3 targetPos)
+        public static List<float3> MoveEntitiesTo(float3 targetPos, int nbOfEntities, int firstRingNbEntities, float firstRingMinDist)
         {
+            InitializeRingMovementSystem(nbOfEntities, firstRingNbEntities, firstRingMinDist, out var minDistance, out var entitiesPerRing);
+
+            var result = GetPositionListAround(targetPos, minDistance, entitiesPerRing);
+            
+            return result;
+            
             Debug.Log("move entities to " + targetPos);
             // calculate new position for each entity with 'MovementComponent' 
             // add the new position to each entity's current position 
@@ -179,24 +185,32 @@ namespace Utils
             // maybe move this method onto 'RayCastSelectSystem' to burst compile it
         }
 
-        public static int InitializeRingMovementSystem(float dist, out float[] minDistance, out int[] entitiesPerRing)
+        public static void InitializeRingMovementSystem(int nbEntities, int nbEntitiesPerRing, float dist, out float[] minDistance, out int[] entitiesPerRing)
         {
             var i = 0;
-            var iterations = 10;
+
+            nbEntities -= 1; // don't count the first one which is central
+
+            var iterations = (int) (nbEntities - 1) / nbEntitiesPerRing;
             
             var distanceResult = new float[iterations];
             var countResult = new int[iterations];
+
+            var ringIndex = 0; // index of the current ring
             
-            for (i = 0; i < iterations; ++i)
+            for (i = 0; i < nbEntities; i+=nbEntitiesPerRing)
             {
-                distanceResult[i] = (float)i;
-                countResult[i] = i;
+                if (i >= nbEntitiesPerRing)
+                {
+                    nbEntitiesPerRing *= 2;
+                    ++ringIndex;
+                }
+                distanceResult[ringIndex] = dist + dist * ringIndex;
+                countResult[ringIndex] = nbEntitiesPerRing;
             }
 
             minDistance = distanceResult;
             entitiesPerRing = countResult;
-            
-            return -1;
         }
 
         public static List<float3> GetPositionListAround(float3 startPosition, float[] ringDistance,
