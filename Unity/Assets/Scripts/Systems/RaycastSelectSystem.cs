@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using Components;
+using Test.ECS;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
 using Utils;
 
@@ -31,26 +33,19 @@ namespace Systems
 
             if (Input.GetMouseButtonDown(2))
             {
-                Debug.Log("1) mouse button 2 clicked !");
-                var position = BlobUtils.GetMousePositionInPhysicWorld(out var haveHit);
-                Debug.Log("4) position found : " + position);
+                var position = BlobUtils.GetGroundPosition(out var haveHit);
+
+                if (!haveHit) return;
                 
-                var forward = Input.mousePosition + new Vector3(0.0f, 0.0f, -100.0f);
-                Debug.DrawLine(BlobUtils.GetMousePositionInPhysicWorld(), forward, Color.magenta, 10);
-
-                if (haveHit)
+                var targetPositions = BlobUtils.MoveEntitiesTo(position, 20, 5, 10f);
+                var positionIndex = 0;
+                Entities.WithAll<BlobUnitMovement>().ForEach((Entity entity, ref BlobUnitMovement blobUnitMovement) =>
                 {
-                    var targetPositions = BlobUtils.MoveEntitiesTo(position, 20, 5, 10f);
-                    var positionIndex = 0;
-                    Entities.WithAll<BlobUnitMovement>().ForEach((Entity entity, ref BlobUnitMovement blobUnitMovement) =>
-                    {
-                        blobUnitMovement.position = targetPositions[positionIndex];
-                        positionIndex = (positionIndex + 1) % targetPositions.Count;
-                        blobUnitMovement.move = true;
-                    });
-                }
-
-                Debug.Log("5) end of process");
+                    blobUnitMovement.position = targetPositions[positionIndex];
+                    Debug.Log(targetPositions[positionIndex] + " at " + positionIndex);
+                    positionIndex = (positionIndex + 1) % targetPositions.Count;
+                    blobUnitMovement.move = true;
+                });
             }
         }
     }

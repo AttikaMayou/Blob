@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using Unity.Physics;
 using Unity.Physics.Systems;
 using Unity.Transforms;
+using Ray = Unity.Physics.Ray;
 using RaycastHit = Unity.Physics.RaycastHit;
 
 //Author : Attika
@@ -13,6 +16,16 @@ namespace Utils
 {
     public class BlobUtils : MonoBehaviour
     {
+        public static BlobUtils instance;
+
+        private void Awake()
+        {
+            if (!instance)
+                instance = this;
+        }
+
+        // Ground layer
+        public LayerMask groundMask;
         
         #region physics methods
         private static EntityManager _manager;
@@ -42,11 +55,40 @@ namespace Utils
             return _physicsWorld;
         }
 
-        private static CollisionWorld GetCurrentCollisionWorld()
+        public static CollisionWorld GetCurrentCollisionWorld()
         {
             _collisionWorld = GetCurrentPhysicsWorld().CollisionWorld;
             return _collisionWorld;
         }
+        
+        public static CollisionFilter LayerMaskToFilter(LayerMask mask)
+        {
+            CollisionFilter filter = new CollisionFilter()
+            {
+                BelongsTo = (uint)mask.value,
+                CollidesWith = (uint)mask.value
+            };
+            return filter;
+        }
+ 
+        public static CollisionFilter LayerToFilter(int layer)
+        {
+            if (layer == -1)
+            {
+                return CollisionFilter.Zero;
+            }
+            
+            BitArray32 mask = new BitArray32();
+            mask[layer] = true;
+ 
+            CollisionFilter filter = new CollisionFilter()
+            {
+                BelongsTo = mask.Bits,
+                CollidesWith = mask.Bits
+            };
+            return filter;
+        }
+        
         #endregion
         
         #region mouse methods
@@ -70,6 +112,27 @@ namespace Utils
         {
             var hit = GetHitFromMouse(out var isThereEntity);
             return isThereEntity ?  hit.Position : float3.zero;
+        }
+
+        public static float3 GetGroundPosition(out bool haveHit)
+        {
+            haveHit = false;
+            if (Camera.main == null) return float3.zero;
+            var screenRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                
+            var ray = new Ray {Origin = Input.mousePosition};
+
+            var input = new RaycastInput()
+            {
+                Start = screenRay.origin,
+                End = screenRay.GetPoint(100),
+                Filter = BlobUtils.LayerMaskToFilter(instance.groundMask)
+            };
+
+            if (!_collisionWorld.CastRay(input, out var hit)) return float3.zero;
+            haveHit = true;
+            return hit.Position;
+
         }
 
         public static float3 GetMousePositionInPhysicWorld(out bool isThereEntity)
@@ -114,7 +177,7 @@ namespace Utils
             
             var input = new RaycastInput
             {
-                End = Input.mousePosition + new Vector3(0.0f, 0.0f, -100.0f),
+                End = Input.mousePosition + new Vector3(0.0f, 0.0f, 100.0f),
                 Filter = new CollisionFilter
                 {
                     BelongsTo = ~0u, // bit mask (which layers this collider belongs to)
@@ -244,5 +307,31 @@ namespace Utils
         }
         #endregion
         
+    }
+    
+    public struct BitArray32
+    {
+        public uint Bits;
+ 
+        public bool this[int index]
+        {
+            get
+            {
+                uint mask = 1u << index;
+                return (Bits & mask) == mask;
+            }
+            set
+            {
+                uint mask = 1u << index;
+                if (value)
+                {
+                    Bits |= mask;
+                }
+                else
+                {
+                    Bits &= ~mask;
+                }
+            }
+        }
     }
 }
