@@ -13,21 +13,21 @@ namespace Systems
     public class MoverSystem : JobComponentSystem
     {
         [BurstCompile]
-        private struct MoverSystemJob : IJobForEach<Translation, Rotation, BlobUnitMovement>
+        private struct MoverSystemJob : IJobForEach<Translation, BlobUnitMovement>
         {
-             public float deltaTime;
+            public float deltaTime;
         
-            public void Execute(ref Translation translation, [ReadOnly] ref Rotation rotation, ref BlobUnitMovement movement)
+            public void Execute(ref Translation translation, ref BlobUnitMovement movement)
             {
                 if (!movement.move) return;
-                
+
                 //Peut-être changer cela : 
                 //Une boule est maîtresse des autres
                 //Et les autres suivent en gardant toujours la même distance
                 //entre elles quoi qu'il arrive
                 //plutôt que d'envoyer toutes les positions de toutes les boules 
                 
-                const float reachedPositionDistance = 1f;
+                const float reachedPositionDistance = 1.00001f;
                 
                 if (math.distance(translation.Value, movement.position) > reachedPositionDistance)
                 {

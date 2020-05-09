@@ -239,6 +239,9 @@ namespace Utils
         public static List<float3> GetPositionsForBlobEntities(float3 targetPos, int nbOfEntities, int firstRingNbEntities, 
             float firstRingMinDist)
         {
+            Debug.Log("Nombre entités premier anneau : " + firstRingNbEntities);
+            Debug.Log("Nombre d'entités en tout : " + nbOfEntities);
+            
             InitializeRingMovementSystem(nbOfEntities, firstRingNbEntities, firstRingMinDist, 
                 out var minDistance, out var entitiesPerRing);
 
@@ -257,6 +260,7 @@ namespace Utils
             nbEntities -= 1; // don't count the first one which is central
 
             var iterations = (nbEntities - 1) / nbEntitiesPerRing;
+            iterations++;
             
             var distanceResult = new float[iterations];
             var countResult = new int[iterations];

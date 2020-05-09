@@ -22,7 +22,7 @@ namespace Systems
 
             if (!haveHit) return;
 
-            var nbEntities = BlobUtils.GetCurrentEntityManager().GetAllEntities().Length;
+            var nbEntities = BlobUtils.GetCurrentEntityManager().GetAllEntities().Length - 8;
             var targetPositions = BlobUtils.GetPositionsForBlobEntities(position, nbEntities, 
                 GameManager.GetInstance().nbEntitiesOnFirstRing, GameManager.GetInstance().minDistanceBetweenBlobs);
             
@@ -32,7 +32,7 @@ namespace Systems
             Entities.WithAll<BlobUnitMovement>().ForEach((Entity entity, ref BlobUnitMovement blobUnitMovement) =>
             {
                 blobUnitMovement.position = targetPositions[positionIndex];
-                //Debug.Log(targetPositions[positionIndex] + " at " + positionIndex);
+                Debug.Log(targetPositions[positionIndex] + " at " + positionIndex);
                 positionIndex = (positionIndex + 1) % targetPositions.Count;
                 blobUnitMovement.move = true;
                 //UpdateInjectedComponentGroups()
