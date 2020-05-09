@@ -236,28 +236,27 @@ namespace Utils
        
         #region movement methods
 
-        public static List<float3> MoveEntitiesTo(float3 targetPos, int nbOfEntities, int firstRingNbEntities, float firstRingMinDist)
+        public static List<float3> GetPositionsForBlobEntities(float3 targetPos, int nbOfEntities, int firstRingNbEntities, 
+            float firstRingMinDist)
         {
-            InitializeRingMovementSystem(nbOfEntities, firstRingNbEntities, firstRingMinDist, out var minDistance, out var entitiesPerRing);
+            InitializeRingMovementSystem(nbOfEntities, firstRingNbEntities, firstRingMinDist, 
+                out var minDistance, out var entitiesPerRing);
 
-            var result = GetPositionListAround(targetPos, minDistance, entitiesPerRing);
-            
-            return result;
-            
-            Debug.Log("move entities to " + targetPos);
+            return GetPositionListAround(targetPos, minDistance, entitiesPerRing);
             // calculate new position for each entity with 'MovementComponent' 
             // add the new position to each entity's current position 
             // multiply it with Time.deltaTime to do it smoothly
             // maybe move this method onto 'RayCastSelectSystem' to burst compile it
         }
 
-        public static void InitializeRingMovementSystem(int nbEntities, int nbEntitiesPerRing, float dist, out float[] minDistance, out int[] entitiesPerRing)
+        public static void InitializeRingMovementSystem(int nbEntities, int nbEntitiesPerRing, float dist, 
+            out float[] minDistance, out int[] entitiesPerRing)
         {
             var i = 0;
 
             nbEntities -= 1; // don't count the first one which is central
 
-            var iterations = (int) (nbEntities - 1) / nbEntitiesPerRing;
+            var iterations = (nbEntities - 1) / nbEntitiesPerRing;
             
             var distanceResult = new float[iterations];
             var countResult = new int[iterations];
@@ -279,13 +278,14 @@ namespace Utils
             entitiesPerRing = countResult;
         }
 
-        public static List<float3> GetPositionListAround(float3 startPosition, float[] ringDistance,
+        private static List<float3> GetPositionListAround(float3 startPosition, float[] ringDistance,
             int[] ringPositionCount)
         {
             var positionList = new List<float3> {startPosition};
 
             for (var ring = 0; ring < ringPositionCount.Length; ++ring)
             {
+                Debug.Log("ring no : " + ring);
                 var ringPositionList =
                     GetPositionListAround(startPosition, ringDistance[ring], ringPositionCount[ring]);
                 positionList.AddRange(ringPositionList);
@@ -303,6 +303,7 @@ namespace Utils
                 var angle = i * (360 / positionCount);
                 var dir = BlobUtils.ApplyRotationToVector(new float3(0, 1, 0), angle);
                 var position = startPosition + dir * distance;
+                Debug.Log(position + " index : " + i);
                 positionList.Add(position);
             }
             

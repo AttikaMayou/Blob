@@ -21,16 +21,18 @@ namespace Systems
             var position = BlobUtils.GetGroundPosition(out var haveHit);
 
             if (!haveHit) return;
-                
-            var targetPositions = BlobUtils.MoveEntitiesTo(position, 20, 5, 10f);
-            var positionIndex = 0;
 
+            var nbEntities = BlobUtils.GetCurrentEntityManager().GetAllEntities().Length;
+            var targetPositions = BlobUtils.GetPositionsForBlobEntities(position, nbEntities, 
+                GameManager.GetInstance().nbEntitiesOnFirstRing, GameManager.GetInstance().minDistanceBetweenBlobs);
+            
             if (BlobUtils.GetCurrentEntityManager().GetAllEntities().Length <= 0) return;
             
+            var positionIndex = 0;
             Entities.WithAll<BlobUnitMovement>().ForEach((Entity entity, ref BlobUnitMovement blobUnitMovement) =>
             {
                 blobUnitMovement.position = targetPositions[positionIndex];
-                Debug.Log(targetPositions[positionIndex] + " at " + positionIndex);
+                //Debug.Log(targetPositions[positionIndex] + " at " + positionIndex);
                 positionIndex = (positionIndex + 1) % targetPositions.Count;
                 blobUnitMovement.move = true;
                 //UpdateInjectedComponentGroups()

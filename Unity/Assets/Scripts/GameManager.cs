@@ -9,6 +9,9 @@ using Utils;
 
 public class GameManager : MonoBehaviour
 {
+    public int nbEntitiesOnFirstRing;
+    public float minDistanceBetweenBlobs;
+    
     //Handle GameManager unique instance
     private static GameManager _instance;
     public static GameManager GetInstance()

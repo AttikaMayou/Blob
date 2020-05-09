@@ -14,6 +14,5 @@ namespace Components
         public float moveSpeed;
         public float3 position;
         public float3 lastMoveDir;
-
     }
 }
