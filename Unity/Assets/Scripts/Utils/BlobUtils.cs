@@ -16,12 +16,12 @@ namespace Utils
 {
     public class BlobUtils : MonoBehaviour
     {
-        public static BlobUtils instance;
+        private static BlobUtils _instance;
 
         private void Awake()
         {
-            if (!instance)
-                instance = this;
+            if (!_instance)
+                _instance = this;
         }
 
         // Ground layer
@@ -63,7 +63,7 @@ namespace Utils
         
         public static CollisionFilter LayerMaskToFilter(LayerMask mask)
         {
-            CollisionFilter filter = new CollisionFilter()
+            var filter = new CollisionFilter()
             {
                 BelongsTo = (uint)mask.value,
                 CollidesWith = (uint)mask.value
@@ -77,11 +77,10 @@ namespace Utils
             {
                 return CollisionFilter.Zero;
             }
-            
-            BitArray32 mask = new BitArray32();
-            mask[layer] = true;
- 
-            CollisionFilter filter = new CollisionFilter()
+
+            var mask = new BitArray32 {[layer] = true};
+
+            var filter = new CollisionFilter()
             {
                 BelongsTo = mask.Bits,
                 CollidesWith = mask.Bits
@@ -126,7 +125,7 @@ namespace Utils
             {
                 Start = screenRay.origin,
                 End = screenRay.GetPoint(100),
-                Filter = BlobUtils.LayerMaskToFilter(instance.groundMask)
+                Filter = BlobUtils.LayerMaskToFilter(_instance.groundMask)
             };
 
             if (!_collisionWorld.CastRay(input, out var hit)) return float3.zero;
