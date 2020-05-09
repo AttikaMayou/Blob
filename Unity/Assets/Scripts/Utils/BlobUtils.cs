@@ -55,7 +55,7 @@ namespace Utils
             return _physicsWorld;
         }
 
-        public static CollisionWorld GetCurrentCollisionWorld()
+        private static CollisionWorld GetCurrentCollisionWorld()
         {
             _collisionWorld = GetCurrentPhysicsWorld().CollisionWorld;
             return _collisionWorld;
@@ -128,9 +128,13 @@ namespace Utils
                 Filter = BlobUtils.LayerMaskToFilter(_instance.groundMask)
             };
 
-            if (!_collisionWorld.CastRay(input, out var hit)) return float3.zero;
-            haveHit = true;
-            return hit.Position;
+            if (GetCurrentCollisionWorld().CastRay(input, out var hit))
+            {
+                haveHit = true;
+                return hit.Position;
+            }
+
+            return float3.zero;
 
         }
 
