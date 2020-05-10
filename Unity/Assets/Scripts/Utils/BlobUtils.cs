@@ -117,15 +117,14 @@ namespace Utils
         {
             haveHit = false;
             if (Camera.main == null) return float3.zero;
+            
             var screenRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-                
-            var ray = new Ray {Origin = Input.mousePosition};
-
+            
             var input = new RaycastInput()
             {
                 Start = screenRay.origin,
                 End = screenRay.GetPoint(100),
-                Filter = BlobUtils.LayerMaskToFilter(_instance.groundMask)
+                Filter = LayerMaskToFilter(_instance.groundMask)
             };
 
             if (GetCurrentCollisionWorld().CastRay(input, out var hit))

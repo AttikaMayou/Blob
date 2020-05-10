@@ -37,6 +37,7 @@ namespace Systems
                 }
                 else
                 {
+                    movement.moveSpeed = 0.0f;
                     movement.move = false;
                 }
             }
