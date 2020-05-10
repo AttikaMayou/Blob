@@ -20,12 +20,6 @@ namespace Systems
             public void Execute(ref Translation translation, ref BlobUnitMovement movement)
             {
                 if (!movement.move) return;
-
-                //Peut-être changer cela : 
-                //Une boule est maîtresse des autres
-                //Et les autres suivent en gardant toujours la même distance
-                //entre elles quoi qu'il arrive
-                //plutôt que d'envoyer toutes les positions de toutes les boules 
                 
                 const float reachedPositionDistance = 1.00001f;
                 

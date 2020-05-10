@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 475594305260657667}
   - component: {fileID: 475594305260657668}
   m_Layer: 0
-  m_Name: GameManager 1
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,3 +74,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nbEntitiesOnFirstRing: 5
   minDistanceBetweenBlobs: 10
+  blobSpeed: 10

@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
 {
     public int nbEntitiesOnFirstRing;
     public float minDistanceBetweenBlobs;
+    public float blobSpeed;
     
     //Handle GameManager unique instance
     private static GameManager _instance;

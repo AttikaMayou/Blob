@@ -34,7 +34,7 @@ namespace Systems
                 blobUnitMovement.position = targetPositions[positionIndex];
                 Debug.Log(targetPositions[positionIndex] + " at " + positionIndex);
                 positionIndex = (positionIndex + 1) % targetPositions.Count;
-                blobUnitMovement.moveSpeed = 5.0f;
+                blobUnitMovement.moveSpeed = GameManager.GetInstance().blobSpeed;
                 blobUnitMovement.move = true;
                 //UpdateInjectedComponentGroups()
             });
