@@ -1,6 +1,5 @@
 ﻿using Components;
 using Unity.Burst;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -16,14 +15,13 @@ namespace Systems
         private struct MoverSystemJob : IJobForEach<Translation, BlobUnitMovement>
         {
             public float deltaTime;
+            public float reachedPosition;
         
             public void Execute(ref Translation translation, ref BlobUnitMovement movement)
             {
                 if (!movement.move) return;
                 
-                const float reachedPositionDistance = 1.00001f;
-                
-                if (math.distance(translation.Value, movement.position) > reachedPositionDistance)
+                if (math.distance(translation.Value, movement.position) > reachedPosition)
                 {
                     var moveDir = math.normalize(movement.position - translation.Value);
                     movement.lastMoveDir = moveDir;
@@ -41,7 +39,8 @@ namespace Systems
         {
             var job = new MoverSystemJob()
             {
-                deltaTime = UnityEngine.Time.deltaTime
+                deltaTime = UnityEngine.Time.deltaTime,
+                reachedPosition = GameManager.GetInstance().toleranceDistance
             };
         
             return job.Schedule(this, inputDependencies);

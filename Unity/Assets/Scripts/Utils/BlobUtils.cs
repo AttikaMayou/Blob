@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using Unity.Physics;
 using Unity.Physics.Systems;
-using Unity.Transforms;
-using Ray = Unity.Physics.Ray;
 using RaycastHit = Unity.Physics.RaycastHit;
 
 //Author : Attika
@@ -238,9 +234,6 @@ namespace Utils
         public static List<float3> GetPositionsForBlobEntities(float3 targetPos, int nbOfEntities, int firstRingNbEntities, 
             float firstRingMinDist)
         {
-            Debug.Log("Nombre entités premier anneau : " + firstRingNbEntities);
-            Debug.Log("Nombre d'entités en tout : " + nbOfEntities);
-            
             InitializeRingMovementSystem(nbOfEntities, firstRingNbEntities, firstRingMinDist, 
                 out var minDistance, out var entitiesPerRing);
 
@@ -251,7 +244,7 @@ namespace Utils
             // maybe move this method onto 'RayCastSelectSystem' to burst compile it
         }
 
-        public static void InitializeRingMovementSystem(int nbEntities, int nbEntitiesPerRing, float dist, 
+        private static void InitializeRingMovementSystem(int nbEntities, int nbEntitiesPerRing, float dist, 
             out float[] minDistance, out int[] entitiesPerRing)
         {
             var i = 0;
@@ -281,14 +274,13 @@ namespace Utils
             entitiesPerRing = countResult;
         }
 
-        private static List<float3> GetPositionListAround(float3 startPosition, float[] ringDistance,
-            int[] ringPositionCount)
+        private static List<float3> GetPositionListAround(float3 startPosition, IReadOnlyList<float> ringDistance,
+            IReadOnlyList<int> ringPositionCount)
         {
             var positionList = new List<float3> {startPosition};
 
-            for (var ring = 0; ring < ringPositionCount.Length; ++ring)
+            for (var ring = 0; ring < ringPositionCount.Count; ++ring)
             {
-                Debug.Log("ring no : " + ring);
                 var ringPositionList =
                     GetPositionListAround(startPosition, ringDistance[ring], ringPositionCount[ring]);
                 positionList.AddRange(ringPositionList);
@@ -306,7 +298,6 @@ namespace Utils
                 var angle = i * (360 / positionCount);
                 var dir = BlobUtils.ApplyRotationToVector(new float3(0, 1, 0), angle);
                 var position = startPosition + dir * distance;
-                Debug.Log(position + " index : " + i);
                 positionList.Add(position);
             }
             

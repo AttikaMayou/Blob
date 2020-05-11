@@ -72,6 +72,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e309aa760329f594c82e8ee161231906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entitiesInEnvironment: 8
   nbEntitiesOnFirstRing: 5
-  minDistanceBetweenBlobs: 10
+  minDistanceBetweenBlobs: 5
+  toleranceDistance: 0.1
   blobSpeed: 10

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 4336627344096932464}
   - component: {fileID: 4336627344096932466}
   - component: {fileID: 4336627344096932467}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BlobSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}

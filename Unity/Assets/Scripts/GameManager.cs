@@ -1,16 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Unity.Entities;
-using Unity.Transforms;
+﻿using UnityEngine;
 using Utils;
 
 //Author : Attika
 
 public class GameManager : MonoBehaviour
 {
+    public int entitiesInEnvironment;
     public int nbEntitiesOnFirstRing;
     public float minDistanceBetweenBlobs;
+    public float toleranceDistance;
     public float blobSpeed;
     
     //Handle GameManager unique instance
