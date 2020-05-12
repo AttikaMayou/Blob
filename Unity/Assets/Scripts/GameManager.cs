@@ -9,9 +9,9 @@ public class GameManager : MonoBehaviour
     [Header ("Game Parameters")]
     public int entitiesInEnvironment;
     public int nbEntitiesOnFirstRing;
-    public float minDistanceBetweenBlobs;
     public float toleranceDistance;
     public float blobSpeed;
+    public float blobRadius;
     
     // handle GameManager instance
     private static GameManager _instance;

@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using Unity.Physics;
 using Unity.Physics.Systems;
+using Collider = UnityEngine.Collider;
 using RaycastHit = Unity.Physics.RaycastHit;
 
 //Author : Attika
@@ -150,7 +152,7 @@ namespace Utils
         
         private static float3 ApplyRotationToVector(float3 vec, float angle)
         {
-            return Quaternion.Euler(0, 0, angle) * vec;
+            return Quaternion.Euler(0, angle, 0) * vec;
         }
         
         #endregion
@@ -224,12 +226,12 @@ namespace Utils
         // get position of a ring
         private static IEnumerable<float3> GetPositionListAround(float3 startPosition, float distance, int positionCount)
         {
-            var positionList = new List<float3> {startPosition};
+            var positionList = new List<float3> {};
 
             for (var i = 0; i < positionCount; ++i)
             {
                 var angle = i * (360 / positionCount);
-                var dir = BlobUtils.ApplyRotationToVector(new float3(0, 1, 0), angle);
+                var dir = ApplyRotationToVector(new float3(1, 0, 1), angle);
                 var position = startPosition + dir * distance;
                 positionList.Add(position);
             }

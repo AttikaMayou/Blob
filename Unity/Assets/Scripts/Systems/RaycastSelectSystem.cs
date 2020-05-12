@@ -1,5 +1,6 @@
 ﻿using Components;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 using Utils;
 
@@ -16,6 +17,7 @@ namespace Systems
             
             // get position on the ground where user clicked
             var position = BlobUtils.GetGroundPosition(out var haveHit);
+            position += new float3(0, GameManager.GetInstance().blobRadius*0.5f, 0);
 
             // if user did not hit the ground, return
             if (!haveHit) return;
@@ -27,7 +29,7 @@ namespace Systems
             var nbBlobEntities = BlobUtils.GetCurrentEntityManager().GetAllEntities().Length - GameManager.GetInstance().entitiesInEnvironment;
             // get a list of all positions blobs should go to, according to where the player clicked
             var targetPositions = BlobUtils.GetPositionsForBlobEntities(position, nbBlobEntities, 
-                GameManager.GetInstance().nbEntitiesOnFirstRing, GameManager.GetInstance().minDistanceBetweenBlobs);
+                GameManager.GetInstance().nbEntitiesOnFirstRing, GameManager.GetInstance().blobRadius*0.5f);
             
             // assign positions and move speed to all blob units
             var positionIndex = 0;
