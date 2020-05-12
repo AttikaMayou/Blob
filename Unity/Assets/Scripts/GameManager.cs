@@ -5,13 +5,15 @@ using Utils;
 
 public class GameManager : MonoBehaviour
 {
+    // game variables
+    [Header ("Game Parameters")]
     public int entitiesInEnvironment;
     public int nbEntitiesOnFirstRing;
     public float minDistanceBetweenBlobs;
     public float toleranceDistance;
     public float blobSpeed;
     
-    //Handle GameManager unique instance
+    // handle GameManager instance
     private static GameManager _instance;
     public static GameManager GetInstance()
     {
@@ -20,13 +22,5 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         _instance = this;
-    }
-    
-    private void Start()
-    {
-        var entityManager = BlobUtils.GetCurrentEntityManager();
-
-        //TODO : find how to get these components from game objects converted into an entity
-        //and find a way to add to these fresh converted entities new and custom components (won't be too hard)
     }
 }

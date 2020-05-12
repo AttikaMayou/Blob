@@ -74,6 +74,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entitiesInEnvironment: 8
   nbEntitiesOnFirstRing: 5
-  minDistanceBetweenBlobs: 5
+  minDistanceBetweenBlobs: 1
   toleranceDistance: 0.1
-  blobSpeed: 10
+  blobSpeed: 15

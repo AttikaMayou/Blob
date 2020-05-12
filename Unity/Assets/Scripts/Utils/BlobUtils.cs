@@ -12,51 +12,73 @@ namespace Utils
 {
     public class BlobUtils : MonoBehaviour
     {
+        // handle BlobUtils instance
         private static BlobUtils _instance;
-
         private void Awake()
         {
             if (!_instance)
                 _instance = this;
         }
 
+        
+        
+        //------------PUBLIC VARIABLES------------//
+        
         // Ground layer
         public LayerMask groundMask;
         
+        //---------------------------------------//
+        
+        
+        
         #region physics methods
+        // physic system variables
         private static EntityManager _manager;
         private static World _world;
         private static BuildPhysicsWorld _buildPhysicsWorld;
         private static PhysicsWorld _physicsWorld;
         private static CollisionWorld _collisionWorld;
         
+        /// <summary>
+        /// Get the current Entity Manager
+        /// </summary>
+        /// <returns></returns>
         public static EntityManager GetCurrentEntityManager()
         {
             return _manager ?? (_manager = World.DefaultGameObjectInjectionWorld.EntityManager);
         }
 
+        // get current world
         private static World GetCurrentWorld()
         {
             return _world ?? (_world = GetCurrentEntityManager().World);
         }
 
+        // build the physic world
         private static BuildPhysicsWorld BuildPhysicsWorld()
         {
             return _buildPhysicsWorld ?? (_buildPhysicsWorld = GetCurrentWorld().GetExistingSystem<Unity.Physics.Systems.BuildPhysicsWorld>());
         }
 
+        // get current physic world
         private static PhysicsWorld GetCurrentPhysicsWorld()
         {
             _physicsWorld = BuildPhysicsWorld().PhysicsWorld;
             return _physicsWorld;
         }
 
+        // get collision world
         private static CollisionWorld GetCurrentCollisionWorld()
         {
             _collisionWorld = GetCurrentPhysicsWorld().CollisionWorld;
             return _collisionWorld;
         }
         
+        /// <summary>
+        /// Convert a layer mask in classic unity physic system into a filter for ecs physic system
+        /// </summary>
+        /// <param name="mask"></param>
+        /// <returns></returns>
         public static CollisionFilter LayerMaskToFilter(LayerMask mask)
         {
             var filter = new CollisionFilter()
@@ -67,6 +89,11 @@ namespace Utils
             return filter;
         }
  
+        /// <summary>
+        /// Convert a layer in classic unity physic system into a filter for ecs physic system
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <returns></returns>
         public static CollisionFilter LayerToFilter(int layer)
         {
             if (layer == -1)
@@ -88,27 +115,11 @@ namespace Utils
         
         #region mouse methods
 
-        private static Vector3 GetMouseWorldPosition(Vector3 screenPosition, Camera worldCamera)
-        {
-            var pos = worldCamera.ScreenToWorldPoint(screenPosition);
-            //pos.z = worldCamera.transform.position.z;
-            return pos;
-        }
-        
-        public static Vector3 GetMouseWorldPosition()
-        {
-            var pos = GetMouseWorldPosition(Input.mousePosition, Camera.main);
-            Debug.Log("2) Mouse pos : " + Input.mousePosition);
-            Debug.Log("3) Converted in world pos : " + pos);
-            return pos;
-        }
-
-        public static float3 GetMousePositionInPhysicWorld()
-        {
-            var hit = GetHitFromMouse(out var isThereEntity);
-            return isThereEntity ?  hit.Position : float3.zero;
-        }
-
+        /// <summary>
+        /// Get the exact position on ground where user point at
+        /// </summary>
+        /// <param name="haveHit"> return false if ground was not hovered by mouse, otherwise return true </param>
+        /// <returns></returns>
         public static float3 GetGroundPosition(out bool haveHit)
         {
             haveHit = false;
@@ -132,105 +143,28 @@ namespace Utils
             return float3.zero;
 
         }
-
-        public static float3 GetMousePositionInPhysicWorld(out bool isThereEntity)
-        {
-            var hit = GetHitFromMouse(out isThereEntity);
-            return isThereEntity ?  hit.Position : float3.zero;
-        }
-        #endregion
         
-        #region raycast methods
-        public static Entity RayCastFromMouse(out bool isThereEntity)
-        {
-            var hit = GetHitFromMouse(out isThereEntity);
-            return isThereEntity ? GetCurrentPhysicsWorld().Bodies[hit.RigidBodyIndex].Entity : Entity.Null;
-        }
-        
-        public static Entity RayCast(float3 rayFrom, float3 rayTo, out bool haveHit)
-        {
-            var hit = GetHitFromInWorld(rayTo, rayFrom, out haveHit);
-            return haveHit ? GetCurrentPhysicsWorld().Bodies[hit.RigidBodyIndex].Entity : Entity.Null;
-        }
-
-        public static RaycastHit GetHitFromMouse(out bool haveHit)
-        {
-            var input = RayFromMouseInWorld();
-
-            haveHit = _collisionWorld.CastRay(input, out var hit);
-            return hit;
-        }
-
-        private static RaycastHit GetHitFromInWorld(float3 rayTo, float3 rayFrom, out bool haveHit)
-        {
-            var input = RayFromInWorld(rayTo, rayFrom);
-            
-            haveHit = _collisionWorld.CastRay(input, out var hit);
-            return hit;
-        }
-
-        private static RaycastInput RayFromMouseInWorld()
-        {
-            GetCurrentCollisionWorld(); // initialization of current physics world 
-            
-            var input = new RaycastInput
-            {
-                End = Input.mousePosition + new Vector3(0.0f, 0.0f, 100.0f),
-                Filter = new CollisionFilter
-                {
-                    BelongsTo = ~0u, // bit mask (which layers this collider belongs to)
-                    CollidesWith = ~0u, // bit mask (which layers this collider can collide with)
-                    GroupIndex = 0
-                },
-                Start = GetMouseWorldPosition()
-            };
-            
-            return input;
-        }
-
-        private static RaycastInput RayFromInWorld(float3 rayTo, float3 rayFrom)
-        {
-            GetCurrentCollisionWorld(); // initialization of current physics world 
-            
-            var input = new RaycastInput
-            {
-                End = rayTo,
-                Filter = new CollisionFilter
-                {
-                    BelongsTo = ~0u, // bit mask (which layers this collider belongs to)
-                    CollidesWith = ~0u, // bit mask (which layers this collider can collide with)
-                    GroupIndex = 0
-                },
-                Start = rayFrom
-            };
-            
-            return input;
-        }
-
-        public static RaycastInput RayFromInWorld(float3 rayTo, float3 rayFrom, CollisionFilter filter)
-        {
-            GetCurrentCollisionWorld(); // initialization of current physics world 
-            
-            var input = new RaycastInput
-            {
-                End = rayTo,
-                Filter = filter,
-                Start = rayFrom
-            };
-            
-            return input;
-        }
         #endregion
         
         #region mathematics methods
+        
         private static float3 ApplyRotationToVector(float3 vec, float angle)
         {
             return Quaternion.Euler(0, 0, angle) * vec;
         }
+        
         #endregion
        
         #region movement methods
 
+        /// <summary>
+        /// Get the positions list to organize blobs
+        /// </summary>
+        /// <param name="targetPos"> central position </param>
+        /// <param name="nbOfEntities"> number of positions to find </param>
+        /// <param name="firstRingNbEntities"> number of positions on first ring around central position </param>
+        /// <param name="firstRingMinDist"> distance between position </param>
+        /// <returns></returns>
         public static List<float3> GetPositionsForBlobEntities(float3 targetPos, int nbOfEntities, int firstRingNbEntities, 
             float firstRingMinDist)
         {
@@ -238,12 +172,9 @@ namespace Utils
                 out var minDistance, out var entitiesPerRing);
 
             return GetPositionListAround(targetPos, minDistance, entitiesPerRing);
-            // calculate new position for each entity with 'MovementComponent' 
-            // add the new position to each entity's current position 
-            // multiply it with Time.deltaTime to do it smoothly
-            // maybe move this method onto 'RayCastSelectSystem' to burst compile it
         }
 
+        // calculate ring parameters according to initial ones
         private static void InitializeRingMovementSystem(int nbEntities, int nbEntitiesPerRing, float dist, 
             out float[] minDistance, out int[] entitiesPerRing)
         {
@@ -274,6 +205,7 @@ namespace Utils
             entitiesPerRing = countResult;
         }
 
+        // get all positions
         private static List<float3> GetPositionListAround(float3 startPosition, IReadOnlyList<float> ringDistance,
             IReadOnlyList<int> ringPositionCount)
         {
@@ -289,6 +221,7 @@ namespace Utils
             return positionList;
         }
 
+        // get position of a ring
         private static IEnumerable<float3> GetPositionListAround(float3 startPosition, float distance, int positionCount)
         {
             var positionList = new List<float3> {startPosition};
@@ -303,6 +236,7 @@ namespace Utils
             
             return positionList;
         }
+        
         #endregion
         
     }
