@@ -15,7 +15,7 @@ public class RaycastSelectSystem : ComponentSystem
         {
             // get position on the ground where user clicked
             var position = BlobUtils.GetGroundPosition(out var haveHit);
-            position += new float3(0, GameManager.GetInstance().blobRadius*0.5f, 0);
+            position += new float3(0, GameManager.GetInstance().blobRadius, 0);
 
             // if user did not hit the ground, return
             if (!haveHit) return;
@@ -27,7 +27,7 @@ public class RaycastSelectSystem : ComponentSystem
             var nbBlobEntities = BlobUtils.GetCurrentEntityManager().GetAllEntities().Length - GameManager.GetInstance().entitiesInEnvironment;
             // get a list of all positions blobs should go to, according to where the player clicked
             var targetPositions = BlobUtils.GetPositionsForBlobEntities(position, nbBlobEntities, 
-                GameManager.GetInstance().nbEntitiesOnFirstRing, GameManager.GetInstance().blobRadius*0.5f);
+                GameManager.GetInstance().nbEntitiesOnFirstRing, GameManager.GetInstance().blobRadius);
             
             // assign positions and move speed to all blob units
             var positionIndex = 0;

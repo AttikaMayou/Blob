@@ -257,7 +257,7 @@ namespace Utils
 
         public static List<Vector4> GetBlobsCurrentPositions()
         {
-            return _instance.currentBlobPositions;
+            return _instance != null ? _instance.currentBlobPositions : null;
         }
         
         #endregion
