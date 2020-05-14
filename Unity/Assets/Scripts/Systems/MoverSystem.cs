@@ -17,6 +17,7 @@ namespace Systems
             // variable of this job
             public float deltaTime; // current time in game
             public float reachedPosition; // tolerance between target position and current blob position
+            public Random random; //Unity Mathematics Random variable to get random within a job
         
             public void Execute(ref Translation translation, ref BlobUnitMovement movement)
             {
@@ -29,7 +30,7 @@ namespace Systems
                     var moveDir = math.normalize(movement.position - translation.Value);
                     movement.lastMoveDir = moveDir;
                     // move blob by updating his position
-                    translation.Value += moveDir * movement.moveSpeed * deltaTime;
+                    translation.Value += (moveDir * movement.moveSpeed * deltaTime) * random.NextFloat(0.1f, 1.0f);
                 }
                 // if blob reached his target position
                 else
@@ -47,7 +48,8 @@ namespace Systems
             var job = new MoverSystemJob()
             {
                 deltaTime = UnityEngine.Time.deltaTime,
-                reachedPosition = GameManager.GetInstance().toleranceDistance
+                reachedPosition = GameManager.GetInstance().toleranceDistance,
+                random = new Random((uint)UnityEngine.Random.Range(1, 100000))
             };
         
             return job.Schedule(this, inputDependencies);

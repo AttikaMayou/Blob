@@ -145,7 +145,7 @@ namespace Utils
             return float3.zero;
 
         }
-        
+
         #endregion
         
         #region mathematics methods
@@ -231,7 +231,7 @@ namespace Utils
             for (var i = 0; i < positionCount; ++i)
             {
                 var angle = i * (360 / positionCount);
-                var dir = ApplyRotationToVector(new float3(1, 0, 1), angle);
+                var dir = ApplyRotationToVector(new float3(1, 0, 0), angle);
                 var position = startPosition + dir * distance;
                 positionList.Add(position);
             }
