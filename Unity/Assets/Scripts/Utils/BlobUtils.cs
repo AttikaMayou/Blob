@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using Unity.Physics;
 using Unity.Physics.Systems;
 using Collider = UnityEngine.Collider;
-using RaycastHit = Unity.Physics.RaycastHit;
 
 //Author : Attika
 
@@ -28,6 +26,9 @@ namespace Utils
         
         // Ground layer
         public LayerMask groundMask;
+        
+        //Current positions of all blobs
+        public List<Vector3> currentBlobPositions;
         
         //---------------------------------------//
         
@@ -237,6 +238,25 @@ namespace Utils
             }
             
             return positionList;
+        }
+
+        public static void UpdateBlobPositions(List<float3> positions)
+        {
+            var updatedPositions = new List<Vector3>();
+            
+            for(var i = 0; i < positions.Count; ++i)
+            {
+                updatedPositions.Add(new Vector3(positions[i].x, 
+                    positions[i].y,
+                    positions[i].z));
+            }
+
+            _instance.currentBlobPositions = updatedPositions;
+        }
+
+        public static List<Vector3> GetBlobsCurrentPositions()
+        {
+            return _instance.currentBlobPositions;
         }
         
         #endregion

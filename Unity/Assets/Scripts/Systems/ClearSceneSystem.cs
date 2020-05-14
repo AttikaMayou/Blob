@@ -7,22 +7,19 @@ using Unity.Transforms;
 using UnityEngine;
 using Utils;
 
-namespace Systems
+public class ClearSceneSystem : ComponentSystem
 {
-    public class ClearSceneSystem : ComponentSystem
+    protected override void OnUpdate()
     {
-        protected override void OnUpdate()
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                CleanWorldFromEntities();
-            }
+            CleanWorldFromEntities();
         }
+    }
 
-        private static void CleanWorldFromEntities()
-        {
-            var manager = BlobUtils.GetCurrentEntityManager();
-            manager.DestroyEntity(manager.UniversalQuery);
-        }
+    private static void CleanWorldFromEntities()
+    {
+        var manager = BlobUtils.GetCurrentEntityManager();
+        manager.DestroyEntity(manager.UniversalQuery);
     }
 }
