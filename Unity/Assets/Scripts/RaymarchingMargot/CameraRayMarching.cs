@@ -13,7 +13,7 @@ public class CameraRayMarching : MonoBehaviour
     [SerializeField] private Camera camera;
     [SerializeField] private Light light;
 
-    [SerializeField] private List<Transform> spherePositions;// = new List<Transform>();
+    //[SerializeField] private List<Transform> spherePositions;// = new List<Transform>();
     private ToShaderStruct[] toShaderCustomStruct;
     private ComputeBuffer buffer;
     private ComputeBuffer customStructBuffer;
@@ -22,12 +22,12 @@ public class CameraRayMarching : MonoBehaviour
     [Header("Raymarch parameters")]
     [SerializeField] private Shader myShader;
     [SerializeField] private Material myMaterial;
-    [Range(1, 1000)]
-    [SerializeField] private int rayMarchStep;
+    [Range(1, 2000)]
+    [SerializeField] private int rayMarchStep = 1000;
     [Range(0, 3)]
     [SerializeField] private int ChooseSmoothFunction;
     [SerializeField] private float smoothIntensity;
-    [SerializeField] private float radius = 3;
+    [SerializeField] private float radius = 3f;
 
     //---------------------------POUR DEMO---------------------------------------
    // [SerializeField] private Slider smooth;
@@ -52,14 +52,13 @@ public class CameraRayMarching : MonoBehaviour
         myMaterial.SetVector("lightPosition", light.transform.position);
 
         Vector4[] sphereLocation = new Vector4[BlobUtils.GetBlobsCurrentPositions().Count];
-        for (int i = 0; i < 1; i++) //sphereLocation.Length
+        for (int i = 0; i < 1; i++)
         {
-            sphereLocation[i] = new Vector4(spherePositions[i].position.x, spherePositions[i].position.y, spherePositions[i].position.z, radius);//new Vector4(BlobUtils.GetBlobsCurrentPositions()[i].x, BlobUtils.GetBlobsCurrentPositions()[i].y, BlobUtils.GetBlobsCurrentPositions()[i].z, radius);
-            //Debug.Log(BlobUtils.GetBlobsCurrentPositions()[i]);
+            sphereLocation[i] = new Vector4(BlobUtils.GetBlobsCurrentPositions()[i].x, BlobUtils.GetBlobsCurrentPositions()[i].y, BlobUtils.GetBlobsCurrentPositions()[i].z, radius);
+            Debug.Log(BlobUtils.GetBlobsCurrentPositions()[i]);
         }
         
         myMaterial.SetInt("numberOfSpheres", sphereLocation.Length);
-        Debug.Log(sphereLocation.Length);
         myMaterial.SetVectorArray("sphereLocation", sphereLocation);
 
         Graphics.Blit(source, destination, myMaterial, 0);
