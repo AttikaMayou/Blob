@@ -28,7 +28,7 @@ namespace Utils
         public LayerMask groundMask;
         
         //Current positions of all blobs
-        public List<Vector3> currentBlobPositions;
+        public List<Vector4> currentBlobPositions;
         
         //---------------------------------------//
         
@@ -240,21 +240,22 @@ namespace Utils
             return positionList;
         }
 
-        public static void UpdateBlobPositions(List<float3> positions)
+        public static void UpdateBlobPositions(List<float3> positions, /*List<float> radius*/ float radius)
         {
-            var updatedPositions = new List<Vector3>();
+            var updatedPositions = new List<Vector4>();
             
             for(var i = 0; i < positions.Count; ++i)
             {
-                updatedPositions.Add(new Vector3(positions[i].x, 
+                updatedPositions.Add(new Vector4(positions[i].x, 
                     positions[i].y,
-                    positions[i].z));
+                    positions[i].z, 
+                    radius));
             }
 
             _instance.currentBlobPositions = updatedPositions;
         }
 
-        public static List<Vector3> GetBlobsCurrentPositions()
+        public static List<Vector4> GetBlobsCurrentPositions()
         {
             return _instance.currentBlobPositions;
         }
