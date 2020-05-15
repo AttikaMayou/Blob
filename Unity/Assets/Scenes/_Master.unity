@@ -948,7 +948,7 @@ MonoBehaviour:
   light: {fileID: 197954933}
   myShader: {fileID: 4800000, guid: e978b0b560595a9408655ddffb7575ff, type: 3}
   myMaterial: {fileID: 2100000, guid: 03b283a12b8214e47b51d8050cc3e0fc, type: 2}
-  rayMarchStep: 1500
+  rayMarchStep: 2000
   ChooseSmoothFunction: 0
   smoothIntensity: 0.3
 --- !u!114 &663635750

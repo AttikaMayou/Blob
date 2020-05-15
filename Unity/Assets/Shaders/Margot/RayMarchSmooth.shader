@@ -40,7 +40,7 @@
 			uniform float3 lightColor;
 
 			uniform int numberOfSpheres;
-			uniform float4 sphereLocation[40];
+			uniform float4 sphereLocation[1000];
 
 			uniform sampler2D _CameraDepthTexture;
 

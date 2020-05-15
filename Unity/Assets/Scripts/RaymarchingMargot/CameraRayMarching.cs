@@ -30,7 +30,7 @@ public class CameraRayMarching : MonoBehaviour
     //[SerializeField] private float radius = 3f;
 
     //---------------------------POUR DEMO---------------------------------------
-   // [SerializeField] private Slider smooth;
+    // [SerializeField] private Slider smooth;
 
 
 
@@ -52,10 +52,15 @@ public class CameraRayMarching : MonoBehaviour
         myMaterial.SetVector("lightPosition", light.transform.position);
 
         Vector4[] sphereLocation = new Vector4[BlobUtils.GetBlobsCurrentPositions().Count];
-        for (int i = 0; i < BlobUtils.GetBlobsCurrentPositions().Count; i++)
-            sphereLocation[i] = BlobUtils.GetBlobsCurrentPositions()[i];
+        if (BlobUtils.GetBlobsCurrentPositions().Count > 0)
+        {
+            for (int i = 0; i < BlobUtils.GetBlobsCurrentPositions().Count; i++)
+                sphereLocation[i] = BlobUtils.GetBlobsCurrentPositions()[i];
+        }
+        else
+            sphereLocation = new Vector4[0];
 
-        
+
         myMaterial.SetInt("numberOfSpheres", sphereLocation.Length);
         myMaterial.SetVectorArray("sphereLocation", sphereLocation);
 
