@@ -53,14 +53,14 @@
 			
 			//SDF
 			uniform int _nbSphere;
-			uniform float4 _spheres[41];
+			uniform float4 _spheres[999];
 			uniform float _sphereSmooth;
 			uniform float _degreRotate;
 			uniform float _rotationSpeed;
 
 			//Color
 			uniform fixed4 _groundColor;
-			uniform fixed4 _sphereColor[41];
+			uniform fixed4 _sphereColor[999];
 			uniform float _colorIntensity;
 
 
@@ -106,7 +106,7 @@
 				float4 sphereAdd = float4(_sphereColor[0].rgb, sdSphere(p - _spheres[0].xyz, _spheres[0].w));
 				float4 result = sphereAdd;
 
-				for (int i = 1; i < 41; i++)
+				for (int i = 1; i < _nbSphere; i++)
 				{
 					//Distance
 					sphereAdd = float4(_sphereColor[i].rgb, sdSphere(p - _spheres[i].xyz, _spheres[i].w));				
