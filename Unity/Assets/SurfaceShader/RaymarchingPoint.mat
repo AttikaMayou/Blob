@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: RaymarchingPoint
-  m_Shader: {fileID: 4800000, guid: 9cd1600a2c40a9a4891b78a7bcc5e402, type: 3}
+  m_Shader: {fileID: 4800000, guid: fad27fdcc4a82a44ea4476dd041ece0c, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0

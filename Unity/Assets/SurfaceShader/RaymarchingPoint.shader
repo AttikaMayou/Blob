@@ -18,7 +18,11 @@
         uniform float _Width, _Height, _CameraFOV;
         uniform float3 _CameraForward, _CameraRight, _CameraUp, _CameraPosition;
 
-        float smoothmin (float a, float b, float r) { float h = clamp(.5+.5*(b-a)/r, 0., 1.); return lerp(b, a, h)-r*h*(1.-h); }
+        float smoothmin (float a, float b, float r) 
+        { 
+            float h = clamp(.5+.5*(b-a)/r, 0., 1.); 
+            return lerp(b, a, h)-r*h*(1.-h); 
+        }
 
         struct Input
         {
@@ -36,8 +40,6 @@
             uint id : SV_VertexID;
         };
 
-
-
         float map (float3 pos) {
             float scene = 1.0;
 
@@ -54,7 +56,7 @@
         }
 
         float4 raymarching (float3 eye, float3 ray) {
-            float4 color;
+
             float shade = 0.;
             float3 pos = eye;
             for (int index = 100; index > 0; --index) {

@@ -1,4 +1,6 @@
-﻿// Sphere
+﻿#define PI 3.14159
+
+// Sphere
 // s: radius
 float sdSphere(float3 p, float s)
 {

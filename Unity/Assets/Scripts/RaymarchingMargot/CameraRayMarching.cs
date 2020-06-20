@@ -30,10 +30,6 @@ public class CameraRayMarching : MonoBehaviour
     //[SerializeField] private float radius = 3f;
 
     //---------------------------POUR DEMO---------------------------------------
-    // [SerializeField] private Slider smooth;
-
-
-
     [ImageEffectOpaque]
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
