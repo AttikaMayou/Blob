@@ -194,7 +194,7 @@
 
 				//Ambant occlusion
 				float ao = AmbiantOcclusion(p, n, depth);
-				
+
 				result = color * light * shadow * ao;
 
 				return result;
