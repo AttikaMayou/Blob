@@ -20,7 +20,26 @@ public class BlobSphereSpawnSystem : ComponentSystem
                 EntityManager.SetComponentData(spawnedEntity,
                     new Translation {Value = _spawnPosition});
             });
+        }
 
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Entities.ForEach((ref PrefabEntityComponent prefabEntityComponent) =>
+            {
+                var spawnedEntity = EntityManager.Instantiate(prefabEntityComponent.liquidPrefabEntity);
+                EntityManager.SetComponentData(spawnedEntity,
+                    new Translation {Value = _spawnPosition});
+            });
+        }
+
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            Entities.ForEach((ref PrefabEntityComponent prefabEntityComponent) =>
+            {
+                var spawnedEntity = EntityManager.Instantiate(prefabEntityComponent.viscousPrefabEntity);
+                EntityManager.SetComponentData(spawnedEntity,
+                    new Translation {Value = _spawnPosition});
+            });
         }
     }
 }

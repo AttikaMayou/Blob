@@ -2,12 +2,8 @@
 using Components;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Physics.Authoring;
 using Unity.Transforms;
-using UnityEngine;
 using Utils;
-using Collider = Unity.Physics.Collider;
-using SphereCollider = Unity.Physics.SphereCollider;
 
 //Author : Attika
 

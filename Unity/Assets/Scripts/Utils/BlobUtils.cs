@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using Unity.Physics;
 using Unity.Physics.Systems;
-using Collider = UnityEngine.Collider;
+using Unity.Transforms;
 
 //Author : Attika
 
@@ -20,9 +21,7 @@ namespace Utils
                 _instance = this;
         }
 
-        
-        
-        //------------PUBLIC VARIABLES------------//
+        #region Public Variables
         
         // Ground layer
         public LayerMask groundMask;
@@ -30,11 +29,10 @@ namespace Utils
         //Current positions of all blobs
         public List<Vector4> currentBlobPositions;
         
-        //---------------------------------------//
-        
-        
-        
+        #endregion
+
         #region physics methods
+        
         // physic system variables
         private static EntityManager _manager;
         private static World _world;
@@ -261,7 +259,7 @@ namespace Utils
         }
         
         #endregion
-        
+
     }
     
     public struct BitArray32

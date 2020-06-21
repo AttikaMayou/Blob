@@ -1,5 +1,6 @@
 ﻿using Components;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -43,6 +44,16 @@ public class MoverSystem : JobComponentSystem
     
     protected override JobHandle OnUpdate(JobHandle inputDependencies)
     {
+        //var liquidJob = Entities.WithAll<BlobLiquidStateComponent>().ForEach((Entity e) =>
+        //{
+        //    _multiplier[0] = 3;
+        //}).Schedule(inputDependencies);
+        //
+        //var viscousJob = Entities.WithAll<BlobViscousStateComponent>().ForEach((Entity e) =>
+        //{
+        //    _multiplier[0] = 1;
+        //}).Schedule(liquidJob);
+        
         var job = new MoverSystemJob()
         {
             deltaTime = UnityEngine.Time.deltaTime,

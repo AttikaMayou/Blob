@@ -907,7 +907,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f688d3492087b5748a46633d9cfc3c70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabEntity: {fileID: 4336627344096932457, guid: e20c65ea06d9b0148902104a06def874,
+  prefabEntity: {fileID: 4336627344096932457, guid: 2a20ef91302861d478e6c045523cbaa1,
+    type: 3}
+  viscousPrefabEntity: {fileID: 4336627344096932457, guid: de1cdf9cd9413324590afeffa988f68b,
+    type: 3}
+  liquidPrefabEntity: {fileID: 4336627344096932457, guid: f8a26133eac62ee4e8dea1383c8fa073,
     type: 3}
 --- !u!114 &1662930367
 MonoBehaviour:
