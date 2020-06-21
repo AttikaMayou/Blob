@@ -83,8 +83,12 @@ public class RaymarchingCamera : SceneViewFilter
             return;
         }
 
-        _spheresPos = new Vector4[BlobUtils.GetBlobsCurrentPositions().Count];
-        int nbSphere = BlobUtils.GetBlobsCurrentPositions().Count;
+        int nbSphere = 500;  // BlobUtils.GetBlobsCurrentPositions().Count;
+
+        _spheresPos = new Vector4[nbSphere];//new Vector4[BlobUtils.GetBlobsCurrentPositions().Count];
+        for(int j = 0; j < nbSphere; j++)
+               _spheresPos[j] = new Vector4(0, 8, 0);
+
 
         if (nbSphere > 0)
         {

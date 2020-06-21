@@ -736,7 +736,7 @@ MonoBehaviour:
   _aoIterations: 3
   _aoIntensity: 0.25
   reflectionCountSlider: {fileID: 0}
-  _reflectionCount: 1
+  _reflectionCount: 0
   _reflectionIntensity: 0.296
   _envReflectionIntensity: 0.024
   _reflectionCube: {fileID: 8900000, guid: 34ecf341d6c6df54e8afa62941a69f31, type: 3}
