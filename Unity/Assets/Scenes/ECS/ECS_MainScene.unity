@@ -691,13 +691,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1392328687}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalRotation: {x: 0.07693437, y: -0, z: -0, w: 0.9970362}
+  m_LocalPosition: {x: 0, y: 2.59, z: -12.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 8.825001, y: 0, z: 0}
 --- !u!114 &1392328691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -736,7 +736,7 @@ MonoBehaviour:
   _aoIterations: 3
   _aoIntensity: 0.25
   reflectionCountSlider: {fileID: 0}
-  _reflectionCount: 0
+  _reflectionCount: 1
   _reflectionIntensity: 0.296
   _envReflectionIntensity: 0.024
   _reflectionCube: {fileID: 8900000, guid: 34ecf341d6c6df54e8afa62941a69f31, type: 3}
@@ -882,6 +882,7 @@ GameObject:
   - component: {fileID: 1607167097}
   - component: {fileID: 1607167096}
   - component: {fileID: 1607167095}
+  - component: {fileID: 1607167098}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -937,6 +938,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1607167098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607167094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c89318713a3b09e40852f777f1c14b00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1662930365
 GameObject:
   m_ObjectHideFlags: 0
