@@ -98,8 +98,8 @@ public class RaymarchingCamera : SceneViewFilter
         }
         else
         {
-            _spheresPos = new Vector4[0];
-            _sphereColor = new Color[0];
+            _spheresPos = new Vector4[1];
+            _sphereColor = new Color[1];
         }
 
         //Set spheres property
