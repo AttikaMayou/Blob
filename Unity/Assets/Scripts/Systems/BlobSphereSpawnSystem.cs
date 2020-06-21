@@ -19,6 +19,8 @@ public class BlobSphereSpawnSystem : ComponentSystem
                 var spawnedEntity = EntityManager.Instantiate(prefabEntityComponent.prefabEntity);
                 EntityManager.SetComponentData(spawnedEntity,
                     new Translation {Value = _spawnPosition});
+                EntityManager.SetComponentData(spawnedEntity,
+                    new BlobIdleStateComponent() {multiplier = 1.0f});
             });
         }
 
@@ -29,6 +31,8 @@ public class BlobSphereSpawnSystem : ComponentSystem
                 var spawnedEntity = EntityManager.Instantiate(prefabEntityComponent.liquidPrefabEntity);
                 EntityManager.SetComponentData(spawnedEntity,
                     new Translation {Value = _spawnPosition});
+                EntityManager.SetComponentData(spawnedEntity,
+                    new BlobLiquidStateComponent() {multiplier = 2.0f});
             });
         }
 
@@ -39,6 +43,8 @@ public class BlobSphereSpawnSystem : ComponentSystem
                 var spawnedEntity = EntityManager.Instantiate(prefabEntityComponent.viscousPrefabEntity);
                 EntityManager.SetComponentData(spawnedEntity,
                     new Translation {Value = _spawnPosition});
+                EntityManager.SetComponentData(spawnedEntity,
+                    new BlobViscousStateComponent() {multiplier = 0.5f});
             });
         }
     }

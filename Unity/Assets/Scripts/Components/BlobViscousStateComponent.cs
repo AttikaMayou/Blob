@@ -7,8 +7,8 @@ namespace Components
 {
     [Serializable]
     [GenerateAuthoringComponent]
-    public class BlobViscousStateComponent : IComponentData
+    public struct BlobViscousStateComponent : IComponentData
     {
-        
+        public float multiplier;
     }
 }

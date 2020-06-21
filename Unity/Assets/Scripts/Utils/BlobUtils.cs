@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using Unity.Physics;
 using Unity.Physics.Systems;
-using Unity.Transforms;
 
 //Author : Attika
 

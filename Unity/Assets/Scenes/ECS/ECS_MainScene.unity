@@ -263,7 +263,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 620.1, y: 73.5}
+  m_SizeDelta: {x: 803.4, y: 221}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &440712184
 MonoBehaviour:
@@ -296,7 +296,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Press E to spawn a sphere
+  m_Text: 'Press E to spawn a sphere
+
+    Press V to spawn a vicious sphere'
 --- !u!222 &440712185
 CanvasRenderer:
   m_ObjectHideFlags: 0
