@@ -1,0 +1,57 @@
+﻿Shader "Margot/Worldspace" {
+    Properties{
+        _Color("Main Color", Color) = (1,1,1,1)
+        _MainTex("Base (RGB)", 2D) = "white" {}
+        _WallTex("Base (RGB)", 2D) = "white" {}
+        _Scale("Texture Scale", Float) = 1.0
+        _Normal("Normal", 2D) = "white" {}
+    }
+        SubShader{
+            Tags { "RenderType" = "Opaque" }
+            LOD 200
+
+        CGPROGRAM
+        #pragma surface surf Lambert
+
+        sampler2D _MainTex;
+        sampler2D _WallTex;
+        fixed4 _Color;
+        float _Scale;
+        sampler2D _Normal;
+
+        struct Input
+        {
+            float3 worldNormal;
+            float3 worldPos;
+            INTERNAL_DATA
+        };
+
+        void surf(Input IN, inout SurfaceOutput o)
+        {
+            float2 UV;
+            fixed4 c;
+
+            if (abs(IN.worldNormal.x) > 0.5)
+            {
+                UV = IN.worldPos.yz; // side
+                c = tex2D(_WallTex, UV * _Scale); // use WALLSIDE texture
+            }
+            else if (abs(IN.worldNormal.z) > 0.5)
+            {
+                UV = IN.worldPos.xy; // front
+                c = tex2D(_WallTex, UV * _Scale); // use WALL texture
+            }
+            else
+            {
+                UV = IN.worldPos.xz; // top
+                c = tex2D(_MainTex, UV * _Scale); // use FLR texture
+            }
+
+            o.Albedo = c.rgb * _Color;
+            o.Normal = UnpackNormal (tex2D(_Normal, IN.worldPos.xz * _Scale));
+        }
+        ENDCG
+        }
+
+            Fallback "VertexLit"
+}
