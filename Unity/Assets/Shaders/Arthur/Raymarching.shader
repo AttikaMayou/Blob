@@ -53,14 +53,14 @@
 			
 			//SDF
 			uniform int _nbSphere;
-			uniform float4 _spheres[999];
+			uniform sampler1D _spheres;
 			uniform float _sphereSmooth;
 			uniform float _degreRotate;
 			uniform float _rotationSpeed;
 
 			//Color
 			uniform fixed4 _groundColor;
-			uniform fixed4 _sphereColor[999];
+			uniform sampler1D _sphereColor;
 			uniform float _colorIntensity;
 
 
@@ -100,16 +100,15 @@
 
 			float4 distanceField(float3 p, float depth) 
 			{
-				//float4 distanceScene = float4(_planeColor.rgb, depth - length(p - _camPos));
-
+				float q = 1.0f / float(_nbSphere - 1);
 				//Distance
-				float4 sphereAdd = float4(_sphereColor[0].rgb, sdSphere(p - _spheres[0].xyz, _spheres[0].w));
+				float4 sphereAdd = float4(tex1Dlod(_sphereColor, 0).rgb, sdSphere(p - tex1Dlod(_spheres, 0).xyz * 1000.0, tex1Dlod(_spheres, 0).w * 1000.0));
 				float4 result = sphereAdd;
 
 				for (int i = 1; i < _nbSphere; i++)
 				{
 					//Distance
-					sphereAdd = float4(_sphereColor[i].rgb, sdSphere(p - _spheres[i].xyz, _spheres[i].w));				
+					sphereAdd = float4(tex1Dlod(_sphereColor, i * q).rgb, sdSphere(p - tex1Dlod(_spheres, i * q).xyz * 1000.0, tex1Dlod(_spheres, i * q).w * 1000.0));
 				
 					result = opUS(result, sphereAdd, _sphereSmooth);
 				}

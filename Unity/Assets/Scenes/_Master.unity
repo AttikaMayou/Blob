@@ -2030,7 +2030,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _shader: {fileID: 4800000, guid: 5676cb1e237c98c4180d060e1e26522e, type: 3}
   _maxDistance: 500
-  _maxIterations: 300
+  _maxIterations: 143
   _accuracy: 0.001
   _light: {fileID: 197954933}
   _shadowIntensity: 1
