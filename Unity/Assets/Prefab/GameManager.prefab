@@ -77,4 +77,4 @@ MonoBehaviour:
   nbEntitiesOnFirstRing: 5
   toleranceDistance: 0.1
   blobSpeed: 15
-  blobRadius: 0.5
+  blobRadius: 0.2

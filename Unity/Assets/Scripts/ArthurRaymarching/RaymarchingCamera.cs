@@ -61,6 +61,7 @@ public class RaymarchingCamera : SceneViewFilter
 
     [Header("Reflection")]
     public Slider reflectionCountSlider;
+    [Range(2, 100)] public float _Glossiness = 50;
     [Range(0, 2)] public int _reflectionCount = 2;
     [Range(0, 1)] public float _reflectionIntensity;
     [Range(0, 1)] public float _envReflectionIntensity;
@@ -131,6 +132,7 @@ public class RaymarchingCamera : SceneViewFilter
         _raymarchMaterial.SetFloat("_aoIntensity", _aoIntensity);
 
         //Reflection
+        _raymarchMaterial.SetFloat("_Glossiness", _Glossiness);
         _raymarchMaterial.SetInt("_reflectionCount", _reflectionCount);
         _raymarchMaterial.SetFloat("_reflectionIntensity", _reflectionIntensity);
         _raymarchMaterial.SetFloat("_envReflectionIntensity", _envReflectionIntensity);
