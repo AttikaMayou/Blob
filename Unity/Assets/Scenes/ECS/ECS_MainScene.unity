@@ -1045,8 +1045,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 860042824}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.65, y: 5, z: -3.19}
-  m_LocalScale: {x: 1.6355, y: 5.794413, z: 1.6355}
+  m_LocalPosition: {x: -2.5, y: 5, z: -4.4}
+  m_LocalScale: {x: 1.8979977, y: 6.7244167, z: 2.7477314}
   m_Children: []
   m_Father: {fileID: 671522063}
   m_RootOrder: 16
@@ -1387,9 +1387,9 @@ Light:
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
-    m_Bias: 0.7
+    m_Bias: 0.5
     m_NormalBias: 0
-    m_NearPlane: 0.76
+    m_NearPlane: 0.1
     m_CullingMatrixOverride:
       e00: 1
       e01: 0
@@ -2169,10 +2169,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabEntity: {fileID: 4336627344096932457, guid: 2a20ef91302861d478e6c045523cbaa1,
     type: 3}
-  viscousPrefabEntity: {fileID: 4336627344096932457, guid: de1cdf9cd9413324590afeffa988f68b,
-    type: 3}
-  liquidPrefabEntity: {fileID: 4336627344096932457, guid: f8a26133eac62ee4e8dea1383c8fa073,
-    type: 3}
+  viscousPrefabEntity: {fileID: 0}
+  liquidPrefabEntity: {fileID: 0}
 --- !u!114 &1662930367
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2290,7 +2288,7 @@ Transform:
   m_GameObject: {fileID: 1691951688}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.6499996, y: 5, z: -11.61}
-  m_LocalScale: {x: 1.6355, y: 5.794413, z: 1.6355}
+  m_LocalScale: {x: 2.0080912, y: 5.794413, z: 1.8668771}
   m_Children: []
   m_Father: {fileID: 671522063}
   m_RootOrder: 15
