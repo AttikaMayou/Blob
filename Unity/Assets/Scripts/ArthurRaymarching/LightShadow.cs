@@ -17,7 +17,7 @@ public class LightShadow : MonoBehaviour
         };
 
         RenderTargetIdentifier shadowmap = BuiltinRenderTextureType.CurrentActive;
-        m_ShadowmapCopy = new RenderTexture(1024, 1024, 16, RenderTextureFormat.ARGB32);
+        m_ShadowmapCopy = new RenderTexture(2048, 2048, 24, RenderTextureFormat.ARGB32);
         m_ShadowmapCopy.filterMode = FilterMode.Point;
 
         // Change shadow sampling mode for m_Light's shadowmap.

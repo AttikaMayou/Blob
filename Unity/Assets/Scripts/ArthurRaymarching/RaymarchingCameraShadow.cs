@@ -101,8 +101,8 @@ public class RaymarchingCameraShadow : SceneViewFilter
             _spheresPos = new Vector4[1];
             _sphereColor = new Color[1];
         }
-        _spheresPos = new Vector4[1];
-        _spheresPos[0] = new Vector4(0, 0, 0, 1);
+        //_spheresPos = new Vector4[1];
+        //_spheresPos[0] = new Vector4(0, 0, 0, 1);
 
         //Set spheres property
         //if (_spheres.Count == 0)
@@ -136,6 +136,7 @@ public class RaymarchingCameraShadow : SceneViewFilter
         _raymarchMaterial.SetMatrix("_CamToWorld", _camera.cameraToWorldMatrix);
         _raymarchMaterial.SetFloat("_maxDistance", _maxDistance);
         _raymarchMaterial.SetVector("_camPos", this.transform.position);
+        _raymarchMaterial.SetVector("_camPosWorld", transform.TransformPoint(this.transform.position));
         _raymarchMaterial.SetInt("_maxIterations", _maxIterations);
         _raymarchMaterial.SetFloat("_accuracy", _accuracy);
 

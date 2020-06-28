@@ -25,6 +25,7 @@
 			uniform sampler2D _CameraDepthTexture;
 			uniform float4x4 _CamFrustum;
 			uniform float4x4 _CamToWorld;
+			uniform float3 _camPosWorld;
 			uniform float3 _camPos;
 			uniform float _maxDistance;
 			uniform int _maxIterations;
@@ -67,6 +68,7 @@
 
 			//Shadow From scene
 			uniform sampler2D m_ShadowmapCopy;
+			uniform float2 uv_m_ShadowmapCopy;
 
 			//Input
             struct appdata
@@ -236,10 +238,34 @@
 				return hit;
 			}
 
-			//Fragment
-			fixed4 frag(v2f i) : SV_Target
+			//Calculate Shadow from light
+			float inShadow(float3 hitPosition)
 			{
-				float depth = LinearEyeDepth(tex2D(_CameraDepthTexture, i.uv).r);
+				//calcul des shadows
+				float  vDepth = distance(_WorldSpaceCameraPos, float4(hitPosition.xyz, 1.));
+
+				//calculate weights for cascade split selection
+				float4 near = float4 (vDepth >= _LightSplitsNear);
+				float4 far = float4 (vDepth < _LightSplitsFar);
+				float4 weights = near * far;
+
+
+				//Cascade
+				float3 shadowCoord0 = mul(unity_WorldToShadow[0], float4(hitPosition.xyz, 1.)).xyz;
+				float3 shadowCoord1 = mul(unity_WorldToShadow[1], float4(hitPosition.xyz, 1.)).xyz;
+				float3 shadowCoord2 = mul(unity_WorldToShadow[2], float4(hitPosition.xyz, 1.)).xyz;
+				float3 shadowCoord3 = mul(unity_WorldToShadow[3], float4(hitPosition.xyz, 1.)).xyz;
+
+				float4 shadowCoord = float4(shadowCoord0 * weights[0] + shadowCoord1 * weights[1] + shadowCoord2 * weights[2] + shadowCoord3 * weights[3], 1);
+				float shadowTerm = tex2D(m_ShadowmapCopy, shadowCoord);
+
+				return shadowTerm = shadowTerm > shadowCoord.z;
+			}
+
+			//Fragment
+			fixed4 frag(v2f i, out float depth : SV_Depth) : SV_Target
+			{
+				depth = LinearEyeDepth(tex2D(_CameraDepthTexture, i.uv).r);
 				depth *= length(i.ray);
 
 				fixed3 col = tex2D(_MainTex, i.uv);
@@ -251,6 +277,7 @@
 
 				bool hit = raymarching(rayOrigin, rayDirection, depth, _maxDistance, _maxIterations, hitPosition, dColor);
 
+				
 				if (hit)
 				{
 					//Shading
@@ -258,6 +285,7 @@
 					float3 s = Shading(hitPosition, n, dColor, depth);
 					result = fixed4(s, 1);
 					result += fixed4(texCUBE(_reflectionCube, n).rgb * _envReflectionIntensity * _reflectionIntensity, 0);
+					result = float4(result.xyz * max(0.3, 1.0 - inShadow(hitPosition)), 1.);
 
 					//Reflection
 					if (_reflectionCount > 0)
@@ -283,6 +311,7 @@
 									n = getNormal(hitPosition, depth);
 									s = Shading(hitPosition, n, dColor, depth);
 									result += fixed4(s * _reflectionIntensity * 0.5, 0);
+
 								}
 							}
 						}
@@ -292,32 +321,8 @@
 				{
 					result = fixed4(0, 0, 0, 0);
 				}
-				
-				//calcul des shadows
-				float4 pInScreenSpace = mul(UNITY_MATRIX_VP, float4(hitPosition.xyz, 1.));
-				depth = pInScreenSpace.z / pInScreenSpace.w;
 
-				float  vDepth = distance(_WorldSpaceCameraPos, float4(hitPosition.xyz, 1.));
-
-				float4 near = float4 (vDepth >= _LightSplitsNear);
-				float4 far = float4 (vDepth < _LightSplitsFar);
-				float4 weights = near * far;
-
-				float3 shadowCoord0 = mul(unity_WorldToShadow[0], float4(hitPosition.xyz, 1.)).xyz;
-				float3 shadowCoord1 = mul(unity_WorldToShadow[1], float4(hitPosition.xyz, 1.)).xyz;
-				float3 shadowCoord2 = mul(unity_WorldToShadow[2], float4(hitPosition.xyz, 1.)).xyz;
-				float3 shadowCoord3 = mul(unity_WorldToShadow[3], float4(hitPosition.xyz, 1.)).xyz; 
-				float3 coord =
-				shadowCoord0 * weights.x + 	// case: Cascaded one
-				shadowCoord1 * weights.y + 	// case: Cascaded two
-				shadowCoord2 * weights.z + 	// case: Cascaded three
-				shadowCoord3 * weights.w; 	// case: Cascaded four
-
-				float shadowmask = tex2D(m_ShadowmapCopy, coord.xy).g;
-				shadowmask = shadowmask < coord.z;
-				col *= max(0.3, shadowmask);
-				return fixed4(col, 1.0);
-				//return fixed4(col * (1.0 - result.w) + result.xyz * result.w ,1.0);
+				return fixed4(col * (1.0 - result.w) + result.xyz * result.w, 1.0);
             }
             ENDCG
         }
