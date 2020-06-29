@@ -54,7 +54,9 @@ public class RaycastSelectSystem : ComponentSystem
         // Give an impulse away to blobs
         if (Input.GetKeyDown(KeyCode.E))
         {
-                
+            var position = BlobUtils.GetGroundPosition(out var haveHit);
+
+            if (!haveHit) return;
         }
             
     }

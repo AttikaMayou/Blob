@@ -8,6 +8,7 @@
     {
         // No culling or depth
         Cull Off ZWrite Off ZTest Always
+		Tags{"LightMode" = "ForwardBase" }
 
         Pass
         {
@@ -46,6 +47,7 @@
 			uniform float _aoIntensity;
 
 			//Reflection
+			uniform float _Glossiness;
 			uniform int _reflectionCount;
 			uniform float _reflectionIntensity;
 			uniform float _envReflectionIntensity;
@@ -53,16 +55,18 @@
 			
 			//SDF
 			uniform int _nbSphere;
-			uniform float4 _spheres[999];
+			uniform sampler1D _spheres;
 			uniform float _sphereSmooth;
 			uniform float _degreRotate;
 			uniform float _rotationSpeed;
 
 			//Color
 			uniform fixed4 _groundColor;
-			uniform fixed4 _sphereColor[999];
+			uniform sampler1D _sphereColor;
 			uniform float _colorIntensity;
 
+			//Shadow from light<
+			uniform sampler2D m_ShadowmapCopy;
 
 			//Input
             struct appdata
@@ -100,16 +104,15 @@
 
 			float4 distanceField(float3 p, float depth) 
 			{
-				//float4 distanceScene = float4(_planeColor.rgb, depth - length(p - _camPos));
-
+				float q = 1.0f / float(_nbSphere - 1);
 				//Distance
-				float4 sphereAdd = float4(_sphereColor[0].rgb, sdSphere(p - _spheres[0].xyz, _spheres[0].w));
+				float4 sphereAdd = float4(tex1Dlod(_sphereColor, 0).rgb, sdSphere(p - tex1Dlod(_spheres, 0).xyz * 1000.0, tex1Dlod(_spheres, 0).w * 1000.0));
 				float4 result = sphereAdd;
 
 				for (int i = 1; i < _nbSphere; i++)
 				{
 					//Distance
-					sphereAdd = float4(_sphereColor[i].rgb, sdSphere(p - _spheres[i].xyz, _spheres[i].w));				
+					sphereAdd = float4(tex1Dlod(_sphereColor, i * q).rgb, sdSphere(p - tex1Dlod(_spheres, i * q).xyz * 1000.0, tex1Dlod(_spheres, i * q).w * 1000.0));
 				
 					result = opUS(result, sphereAdd, _sphereSmooth);
 				}
@@ -178,7 +181,16 @@
 				return (1.0 - ao * _aoIntensity);
 			}
 
-			float3 Shading(float3 p, float3 n, fixed3 c, float depth) 
+			//the distribution of microfacet normals on a surface => BRDF
+			float GGXNormalDistribution(float roughness, float NdotH)
+			{
+				float roughnessSqr = roughness * roughness;
+				float NdotHSqr = NdotH * NdotH;
+				float TanNdotHSqr = (1 - NdotHSqr) / NdotHSqr;
+				return (1.0 / 3.1415926535) * sqrt(roughness / (NdotHSqr * (roughnessSqr + TanNdotHSqr)));
+			}
+
+			float3 Shading(float3 p, float3 n, fixed3 c, float depth, float3 _camPos, float inShadow)
 			{
 				float3 result;
 
@@ -188,15 +200,19 @@
 				//Directional light
 				float3 light = (_lightCol * dot(-_lightDir, n) * 0.5 + 0.5) * _lightIntensity;
 
+				// GGX NDF = > Specular
+				float3 halfDir = normalize(_lightDir + _camPos);
+				float specAngle = max(dot(halfDir, n), 0.0);
+				float specular = pow(specAngle, _Glossiness * 10);
+
 				////Shadows
 				float shadow = softShadow(p, -_lightDir, _shadowDistance.x, _shadowDistance.y, _shadowPenumbra, depth) * 0.5 + 0.5;
 				shadow = max(0.0, pow(shadow, _shadowIntensity));
 
 				//Ambant occlusion
 				float ao = AmbiantOcclusion(p, n, depth);
-				
-				result = color * light * shadow * ao;
 
+				result = color * light * shadow * ao + (specular * ( 1 - inShadow) * c.rgb);
 				return result;
 			}
 
@@ -232,6 +248,30 @@
 				return hit;
 			}
 
+			//Calculate Shadow from light
+			float inShadow(float3 hitPosition)
+			{
+				//calcul des shadows
+				float  vDepth = distance(_WorldSpaceCameraPos, float4(hitPosition.xyz, 1.));
+
+				//calculate weights for cascade split selection
+				float4 near = float4 (vDepth >= _LightSplitsNear);
+				float4 far = float4 (vDepth < _LightSplitsFar);
+				float4 weights = near * far;
+
+
+				//Cascade
+				float3 shadowCoord0 = mul(unity_WorldToShadow[0], float4(hitPosition.xyz, 1.)).xyz;
+				float3 shadowCoord1 = mul(unity_WorldToShadow[1], float4(hitPosition.xyz, 1.)).xyz;
+				float3 shadowCoord2 = mul(unity_WorldToShadow[2], float4(hitPosition.xyz, 1.)).xyz;
+				float3 shadowCoord3 = mul(unity_WorldToShadow[3], float4(hitPosition.xyz, 1.)).xyz;
+
+				float4 shadowCoord = float4(shadowCoord0 * weights[0] + shadowCoord1 * weights[1] + shadowCoord2 * weights[2] + shadowCoord3 * weights[3], 1);
+				float shadowTerm = tex2D(m_ShadowmapCopy, shadowCoord);
+
+				return shadowTerm = shadowTerm > shadowCoord.z;
+			}
+
 			//Fragment
 			fixed4 frag(v2f i) : SV_Target
 			{
@@ -251,9 +291,10 @@
 				{
 					//Shading
 					float3 n = getNormal(hitPosition, depth);
-					float3 s = Shading(hitPosition, n, dColor, depth);
+					float3 s = Shading(hitPosition, n, dColor, depth, _camPos, inShadow(hitPosition));
 					result = fixed4(s, 1);
 					result += fixed4(texCUBE(_reflectionCube, n).rgb * _envReflectionIntensity * _reflectionIntensity, 0);
+					result = float4(result.xyz * max(0.3, 1.0 - inShadow(hitPosition)), 1.);
 
 					//Reflection
 					if (_reflectionCount > 0)
@@ -265,7 +306,7 @@
 						if (hit)
 						{
 							n = getNormal(hitPosition, depth);
-							s = Shading(hitPosition, n, dColor, depth);
+							s = Shading(hitPosition, n, dColor, depth, _camPos, inShadow(hitPosition));
 							result += fixed4(s * _reflectionIntensity, 0);
 
 							if (_reflectionCount > 1)
@@ -277,7 +318,7 @@
 								if (hit)
 								{
 									n = getNormal(hitPosition, depth);
-									s = Shading(hitPosition, n, dColor, depth);
+									s = Shading(hitPosition, n, dColor, depth, _camPos, inShadow(hitPosition));
 									result += fixed4(s * _reflectionIntensity * 0.5, 0);
 								}
 							}

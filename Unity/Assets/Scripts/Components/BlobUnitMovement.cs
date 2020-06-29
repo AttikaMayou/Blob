@@ -12,6 +12,7 @@ namespace Components
     {
         public bool move;
         public float moveSpeed;
+        public float multiplier;
         public float3 position;
         public float3 lastMoveDir;
     }

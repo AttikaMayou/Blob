@@ -1,5 +1,4 @@
 ﻿using Unity.Entities;
-using UnityEngine;
 
 namespace Components
 {
@@ -7,5 +6,7 @@ namespace Components
     public struct PrefabEntityComponent : IComponentData
     {
         public Entity prefabEntity;
+        public Entity viscousPrefabEntity;
+        public Entity liquidPrefabEntity;
     }
 }
