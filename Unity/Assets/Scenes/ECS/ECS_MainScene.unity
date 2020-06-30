@@ -2149,7 +2149,7 @@ GameObject:
   - component: {fileID: 1662930367}
   - component: {fileID: 1662930366}
   m_Layer: 0
-  m_Name: BlobSphereSpawner (1)
+  m_Name: BlobSphereSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2169,8 +2169,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabEntity: {fileID: 4336627344096932457, guid: 2a20ef91302861d478e6c045523cbaa1,
     type: 3}
-  viscousPrefabEntity: {fileID: 0}
-  liquidPrefabEntity: {fileID: 0}
+  viscousPrefabEntity: {fileID: 4336627344096932457, guid: de1cdf9cd9413324590afeffa988f68b,
+    type: 3}
+  liquidPrefabEntity: {fileID: 4336627344096932457, guid: f8a26133eac62ee4e8dea1383c8fa073,
+    type: 3}
 --- !u!114 &1662930367
 MonoBehaviour:
   m_ObjectHideFlags: 0
