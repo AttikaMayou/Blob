@@ -61,6 +61,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   currentBlobPositions: []
+  currentBlobStates: 
+  currentMajorState: 0
 --- !u!114 &475594305260657668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83,5 +85,9 @@ MonoBehaviour:
   nbEntitiesOnFirstRing: 5
   toleranceDistance: 0.1
   blobIdleSpeed: 15
-  blobIdleRadius: 0.5
+  blobLiquidSpeed: 20
+  blobViscousSpeed: 10
+  blobIdleRadius: 1
+  blobLiquidRadius: 0.5
+  blobViscousRadius: 2
   stateUpdate: {fileID: 0}

@@ -77,8 +77,7 @@ public class RaycastSelectSystem : ComponentSystem
             var position = BlobUtils.GetGroundPosition(out var haveHit);
 
             if (!haveHit) return;
-                
-                
+
         }
             
         // Give an impulse away to blobs
