@@ -1,8 +1,10 @@
-﻿using Components;
+﻿using System;
+using Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 using Utils;
+using BlobState = Components.BlobInfosComponent.BlobState;
 
 //Author : Attika
 
@@ -15,7 +17,21 @@ public class RaycastSelectSystem : ComponentSystem
         {
             // get position on the ground where user clicked
             var position = BlobUtils.GetGroundPosition(out var haveHit);
-            position += new float3(0, GameManager.GetInstance().blobIdleRadius, 0);
+            switch (BlobUtils.GetMajorState())
+            {
+                case BlobState.Idle:
+                    position += new float3(0, GameManager.GetInstance().blobIdleRadius, 0);
+                    break;
+                case BlobState.Liquid:
+                    position += new float3(0, GameManager.GetInstance().blobLiquidRadius, 0);
+                    break;
+                case BlobState.Viscous:
+                    position += new float3(0, GameManager.GetInstance().blobViscousRadius, 0);
+                    break;
+                default:
+                    position += new float3(0, GameManager.GetInstance().blobIdleRadius, 0);
+                    break;
+            }
 
             // if user did not hit the ground, return
             if (!haveHit) return;
@@ -35,7 +51,21 @@ public class RaycastSelectSystem : ComponentSystem
             {
                 blobUnitMovement.position = targetPositions[positionIndex];
                 positionIndex = (positionIndex + 1) % targetPositions.Count;
-                blobUnitMovement.moveSpeed = GameManager.GetInstance().blobIdleSpeed;
+                switch (BlobUtils.GetMajorState())
+                {
+                    case BlobState.Idle:
+                        blobUnitMovement.moveSpeed = GameManager.GetInstance().blobIdleSpeed;
+                        break;
+                    case BlobState.Liquid:
+                        blobUnitMovement.moveSpeed = GameManager.GetInstance().blobLiquidSpeed;
+                        break;
+                    case BlobState.Viscous:
+                        blobUnitMovement.moveSpeed = GameManager.GetInstance().blobViscousSpeed;
+                        break;
+                    default:
+                        blobUnitMovement.moveSpeed = GameManager.GetInstance().blobIdleSpeed;
+                        break;
+                }
                 // trigger movement system by passing this true
                 blobUnitMovement.move = true;
             });

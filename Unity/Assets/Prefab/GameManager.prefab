@@ -73,6 +73,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e309aa760329f594c82e8ee161231906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blobUnitPrefab: {fileID: 4336627344096932457, guid: 2a20ef91302861d478e6c045523cbaa1,
+    type: 3}
+  spawnPosition:
+    x: 0
+    y: 6
+    z: 0
   entitiesInEnvironment: 6
   nbEntitiesOnFirstRing: 5
   toleranceDistance: 0.1

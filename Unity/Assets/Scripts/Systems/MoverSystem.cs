@@ -26,7 +26,6 @@ public class MoverSystem : JobComponentSystem
             {
                 // get the normalized direction vector
                 var moveDir = math.normalize(movement.position - translation.Value);
-                movement.lastMoveDir = moveDir;
                 // move blob by updating his position
                 translation.Value += (moveDir * movement.moveSpeed * DeltaTime) * Random.NextFloat(0.1f, 1.0f);
             }

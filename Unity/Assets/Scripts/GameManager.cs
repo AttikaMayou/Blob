@@ -1,22 +1,30 @@
 ﻿using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 //Author : Attika
 
 public class GameManager : MonoBehaviour
 {
-    // game variables
+    [Header("Spawn Parameters")] 
+    public GameObject blobUnitPrefab;
+    public float3 spawnPosition;
+    
     [Header ("Game Parameters")]
     public int entitiesInEnvironment;
     public int nbEntitiesOnFirstRing;
     public float toleranceDistance;
-    [FormerlySerializedAs("blobSpeed")] public float blobIdleSpeed;
-    [FormerlySerializedAs("blobRadius")] public float blobIdleRadius;
 
+    [Header("State Parameters")]
+    public float blobIdleSpeed;
+    public float blobLiquidSpeed;
+    public float blobViscousSpeed;
+    public float blobIdleRadius;
+    public float blobLiquidRadius;
+    public float blobViscousRadius;
     public TextMeshProUGUI stateUpdate;
     private const string StateText = "Current state : ";
-    
+
     // handle GameManager instance
     private static GameManager _instance;
     public static GameManager GetInstance()
@@ -28,7 +36,7 @@ public class GameManager : MonoBehaviour
         _instance = this;
     }
 
-    public static void UpdateStateFeedback(string state)
+    public void UpdateStateFeedback(string state)
     {
         _instance.stateUpdate.text = StateText + state;
     }

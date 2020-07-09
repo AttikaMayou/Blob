@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Components;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -8,6 +7,9 @@ using Utils;
 using BlobState = Components.BlobInfosComponent.BlobState;
 
 //Author : Attika
+
+// This system update positions, radius and color for all spawned blobs. 
+// It also keeps count of how much entity of each state are currently spawned.
 
 public class BlobCounterSystem : ComponentSystem
 {
@@ -18,11 +20,13 @@ public class BlobCounterSystem : ComponentSystem
 
         var positions = new List<float3>();
         var radius = new List<float>();
+        var states = new List<BlobState>();
         
         // for each on all entities that have translation, scale AND blob infos components
         Entities.WithAll<Translation, BlobInfosComponent>().ForEach((Entity entity, BlobInfosComponent infos, ref Translation translation) =>
         {
             positions.Add(translation.Value);
+            states.Add(infos.blobUnitState);
             switch (infos.blobUnitState)
             {
                 case BlobState.Idle:
@@ -35,10 +39,11 @@ public class BlobCounterSystem : ComponentSystem
                     radius.Add(GameManager.GetInstance().blobIdleRadius);
                     break;
                 default:
+                    radius.Add(GameManager.GetInstance().blobIdleRadius);
                     break;
             }
         });
         
-        BlobUtils.UpdateBlobPositions(positions, radius);
+        BlobUtils.UpdateBlobPositions(positions, radius, states);
     }
 }
