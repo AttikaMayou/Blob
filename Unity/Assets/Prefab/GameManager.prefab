@@ -76,5 +76,6 @@ MonoBehaviour:
   entitiesInEnvironment: 6
   nbEntitiesOnFirstRing: 5
   toleranceDistance: 0.1
-  blobSpeed: 15
-  blobRadius: 0.5
+  blobIdleSpeed: 15
+  blobIdleRadius: 0.5
+  stateUpdate: {fileID: 0}

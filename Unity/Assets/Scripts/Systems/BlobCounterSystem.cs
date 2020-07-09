@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Utils;
+using BlobState = Components.BlobInfosComponent.BlobState;
 
 //Author : Attika
 
@@ -17,11 +19,24 @@ public class BlobCounterSystem : ComponentSystem
         var positions = new List<float3>();
         var radius = new List<float>();
         
-        // for each on all entities that have translation, scale AND blob unit movement components
-        Entities.WithAll<Translation, Scale, BlobUnitMovement>().ForEach((Entity entity, ref Translation translation, ref Scale scale) =>
+        // for each on all entities that have translation, scale AND blob infos components
+        Entities.WithAll<Translation, BlobInfosComponent>().ForEach((Entity entity, BlobInfosComponent infos, ref Translation translation) =>
         {
             positions.Add(translation.Value);
-            radius.Add(scale.Value);
+            switch (infos.blobUnitState)
+            {
+                case BlobState.Idle:
+                    radius.Add(GameManager.GetInstance().blobIdleRadius);
+                    break;
+                case BlobState.Liquid:
+                    radius.Add(GameManager.GetInstance().blobIdleRadius);
+                    break;
+                case BlobState.Viscous:
+                    radius.Add(GameManager.GetInstance().blobIdleRadius);
+                    break;
+                default:
+                    break;
+            }
         });
         
         BlobUtils.UpdateBlobPositions(positions, radius);
