@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using Utils;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Camera))]
 public class RaymarchingCamera : SceneViewFilter
@@ -60,6 +61,7 @@ public class RaymarchingCamera : SceneViewFilter
 
     [Header("Reflection")]
     public Slider reflectionCountSlider;
+    [Range(2, 100)] public float _Glossiness = 50;
     [Range(0, 2)] public int _reflectionCount = 2;
     [Range(0, 1)] public float _reflectionIntensity;
     [Range(0, 1)] public float _envReflectionIntensity;
@@ -73,7 +75,7 @@ public class RaymarchingCamera : SceneViewFilter
     [Header("SDF")]
     public Slider smoothSlider;
     [Range(0, 10)] public float _sphereSmooth = 0.7f;
-
+    
     [ImageEffectOpaque]
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
@@ -83,51 +85,28 @@ public class RaymarchingCamera : SceneViewFilter
             return;
         }
 
-        _spheresPos = new Vector4[BlobUtils.GetBlobsCurrentPositions().Count];
         int nbSphere = BlobUtils.GetBlobsCurrentPositions().Count;
+        Texture2D _spheresPos = new Texture2D(nbSphere, 1, TextureFormat.RGBAFloat, false);
+        _spheresPos.filterMode = FilterMode.Point;
+        _spheresPos.wrapMode = TextureWrapMode.Clamp;
 
-        if (nbSphere > 0)
+        Texture2D _colors = new Texture2D(nbSphere, 1, TextureFormat.RGBA32, false);
+        _spheresPos.filterMode = FilterMode.Point;
+        _spheresPos.wrapMode = TextureWrapMode.Clamp;
+
+        Color[] pos = new Color[nbSphere];
+
+        for (int i = 0; i < nbSphere; i++)
         {
-            _sphereColor = new Color[nbSphere];
+            _spheresPos.SetPixel(i, 0, new Color(BlobUtils.GetBlobsCurrentPositions()[i].x * 0.001f,
+                                                 BlobUtils.GetBlobsCurrentPositions()[i].y * 0.001f,
+                                                 BlobUtils.GetBlobsCurrentPositions()[i].z * 0.001f,
+                                                 BlobUtils.GetBlobsCurrentPositions()[i].w * 0.001f));
+            _colors.SetPixel(i, 0, _sphereGradiant.Evaluate(1f / 8 * (i % 8)));
 
-            for (int i = 0; i < BlobUtils.GetBlobsCurrentPositions().Count; i++)
-            {
-                _spheresPos[i] = BlobUtils.GetBlobsCurrentPositions()[i];
-                _sphereColor[i] = _sphereGradiant.Evaluate(1f / 8 * (i % 8));
-            }
         }
-        else
-        {
-            _spheresPos = new Vector4[0];
-            _sphereColor = new Color[0];
-        }
-
-        //Set spheres property
-        //if (_spheres.Count == 0)
-        //{
-        //    _spheresPos = new Vector4[8];
-        //    _sphereColor = new Color[8];
-
-        //    for (int i = 0; i < 8; i++)
-        //    {
-        //        Vector3 pos = Vector3.zero;
-        //        _spheresPos[i] = new Vector4(pos.x, pos.y, pos.z, 4.0f);
-        //        _sphereColor[i] = _sphereGradiant.Evaluate(1f / 8 * i);
-        //    }
-        //}
-        //else
-        //{
-
-        //    _spheresPos = new Vector4[_spheres.Count];
-        //    _sphereColor = new Color[_spheres.Count];
-
-        //    for (int i = 0; i < _spheres.Count; i++)
-        //    {
-        //        Vector3 pos = _spheres[i].transform.position;
-        //        _spheresPos[i] = new Vector4(pos.x, pos.y, pos.z, _spheres[i].transform.localScale.x); 
-        //        _sphereColor[i] = _sphereGradiant.Evaluate(1f / 8 * i % 8);
-        //    }
-        //}
+        _spheresPos.Apply();
+        _colors.Apply();
 
         // Camera
         _raymarchMaterial.SetMatrix("_CamFrustum", GetFrustumCorners(_camera));
@@ -136,7 +115,6 @@ public class RaymarchingCamera : SceneViewFilter
         _raymarchMaterial.SetVector("_camPos", this.transform.position);
         _raymarchMaterial.SetInt("_maxIterations", _maxIterations);
         _raymarchMaterial.SetFloat("_accuracy", _accuracy);
-
 
         //Light
         _raymarchMaterial.SetVector("_lightDir", _light ? _light.transform.forward : Vector3.down);
@@ -154,17 +132,18 @@ public class RaymarchingCamera : SceneViewFilter
         _raymarchMaterial.SetFloat("_aoIntensity", _aoIntensity);
 
         //Reflection
+        _raymarchMaterial.SetFloat("_Glossiness", _Glossiness);
         _raymarchMaterial.SetInt("_reflectionCount", _reflectionCount);
         _raymarchMaterial.SetFloat("_reflectionIntensity", _reflectionIntensity);
         _raymarchMaterial.SetFloat("_envReflectionIntensity", _envReflectionIntensity);
         _raymarchMaterial.SetTexture("_reflectionCube", _reflectionCube);
 
         //Color
-        _raymarchMaterial.SetColorArray("_sphereColor", _sphereColor);
+        _raymarchMaterial.SetTexture("_sphereColor", _colors);
         _raymarchMaterial.SetFloat("_colorIntensity", _colorIntensity);
 
         //SDF
-        _raymarchMaterial.SetVectorArray("_spheres", _spheresPos);
+        _raymarchMaterial.SetTexture("_spheres", _spheresPos);
         _raymarchMaterial.SetInt("_nbSphere", nbSphere);
         _raymarchMaterial.SetFloat("_sphereSmooth", _sphereSmooth);
 

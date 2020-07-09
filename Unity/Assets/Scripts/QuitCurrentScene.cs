@@ -9,7 +9,7 @@ public class QuitCurrentScene : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            SceneManager.LoadScene("MainMenu");
+            Application.Quit();
         }
     }
 }

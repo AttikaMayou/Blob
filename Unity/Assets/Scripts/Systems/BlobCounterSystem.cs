@@ -15,15 +15,15 @@ public class BlobCounterSystem : ComponentSystem
         if (BlobUtils.GetCurrentEntityManager().GetAllEntities().Length <= GameManager.GetInstance().entitiesInEnvironment) return;
 
         var positions = new List<float3>();
-        //var radius = new List<float>();
+        var radius = new List<float>();
         
-        // for each on all entities that have translation AND blob unit movement components
-        Entities.WithAll<Translation, BlobUnitMovement>().ForEach((Entity entity, ref Translation translation) =>
+        // for each on all entities that have translation, scale AND blob unit movement components
+        Entities.WithAll<Translation, Scale, BlobUnitMovement>().ForEach((Entity entity, ref Translation translation, ref Scale scale) =>
         {
             positions.Add(translation.Value);
-            //radius.Add(GameManager.GetInstance().blobRadius);
+            radius.Add(scale.Value);
         });
         
-        BlobUtils.UpdateBlobPositions(positions, GameManager.GetInstance().blobRadius);
+        BlobUtils.UpdateBlobPositions(positions, radius);
     }
 }

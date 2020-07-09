@@ -236,7 +236,7 @@ namespace Utils
             return positionList;
         }
 
-        public static void UpdateBlobPositions(List<float3> positions, /*List<float> radius*/ float radius)
+        public static void UpdateBlobPositions(List<float3> positions, List<float> radius)
         {
             var updatedPositions = new List<Vector4>();
             
@@ -245,7 +245,7 @@ namespace Utils
                 updatedPositions.Add(new Vector4(positions[i].x, 
                     positions[i].y,
                     positions[i].z, 
-                    radius));
+                    radius[i]));
             }
 
             _instance.currentBlobPositions = updatedPositions;
