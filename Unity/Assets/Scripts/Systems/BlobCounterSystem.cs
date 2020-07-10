@@ -16,7 +16,7 @@ public class BlobCounterSystem : ComponentSystem
     protected override void OnUpdate()
     {
         // if there is no blob in the scene, return
-        if (BlobUtils.GetCurrentEntityManager().GetAllEntities().Length <= GameManager.GetInstance().entitiesInEnvironment) return;
+        if (GameManager.GetInstance().GetCurrentBlobCount() <= 0) return;
 
         var positions = new List<float3>();
         var radius = new List<float>();

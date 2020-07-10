@@ -28,10 +28,15 @@ public class BlobSpawnSystem : ComponentSystem
 
     private void SpawnAnEntity(BlobState state)
     {
+        // spawn an entity
         var spawnedEntity = EntityManager.Instantiate(GameManager.GetInstance().blobUnitPrefab);
-        EntityManager.SetComponentData(spawnedEntity,
+        EntityManager.AddComponentData(spawnedEntity,
             new Translation {Value = GameManager.GetInstance().spawnPosition});
-        EntityManager.SetComponentData(spawnedEntity,
+        EntityManager.AddComponentData(spawnedEntity,
             new BlobInfosComponent {blobUnitState = state});
+        
+        // update current number of blobs in scene
+        GameManager.GetInstance().UpdateBlobCount(GameManager.GetInstance().GetCurrentBlobCount() + 1);
+
     }
 }

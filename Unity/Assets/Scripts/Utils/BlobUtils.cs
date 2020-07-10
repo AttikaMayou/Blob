@@ -19,6 +19,7 @@ namespace Utils
             if (!_instance)
                 _instance = this;
         }
+        
         #region Public Variables
         
         // Ground layer
@@ -157,7 +158,7 @@ namespace Utils
         
         #endregion
        
-        #region movement methods
+        #region gameplay methods
 
         /// <summary>
         /// Get the positions list to organize blobs
@@ -262,7 +263,7 @@ namespace Utils
         {
             return _instance != null ? _instance.currentBlobPositions : null;
         }
-
+        
         public static List<BlobState> GetBlobCurrentStates()
         {
             return _instance != null ? _instance.currentBlobStates : null;
@@ -277,6 +278,12 @@ namespace Utils
         public static BlobState GetMajorState()
         {
             return _instance.currentMajorState;
+        }
+
+        public static int InitializeEntitiesInEnvironment()
+        {
+            GameManager.GetInstance().UpdateBlobCount(0);
+            return  GetCurrentEntityManager().GetAllEntities().Length;
         }
         
         #endregion

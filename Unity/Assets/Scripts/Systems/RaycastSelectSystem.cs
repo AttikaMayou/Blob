@@ -37,10 +37,10 @@ public class RaycastSelectSystem : ComponentSystem
             if (!haveHit) return;
 
             // if there is no blob in the scene, return
-            if (BlobUtils.GetCurrentEntityManager().GetAllEntities().Length <= GameManager.GetInstance().entitiesInEnvironment) return;
+            if (GameManager.GetInstance().GetCurrentBlobCount() <= 0) return;
 
-            // get current number of blob entities (all current entities minus environment entities)
-            var nbBlobEntities = BlobUtils.GetCurrentEntityManager().GetAllEntities().Length - GameManager.GetInstance().entitiesInEnvironment;
+            // get current number of blob entities
+            var nbBlobEntities = GameManager.GetInstance().GetCurrentBlobCount();
             // get a list of all positions blobs should go to, according to where the player clicked
             var targetPositions = BlobUtils.GetPositionsForBlobEntities(position, nbBlobEntities, 
                 GameManager.GetInstance().nbEntitiesOnFirstRing, GameManager.GetInstance().blobIdleRadius);
