@@ -1,5 +1,6 @@
 ﻿using Components;
 using Unity.Entities;
+using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
 using BlobState = Components.BlobInfosComponent.BlobState;
@@ -29,6 +30,7 @@ public class BlobSpawnSystem : ComponentSystem
     private void SpawnAnEntity(BlobState state)
     {
         // spawn an entity
+        var archetypeEntity = EntityManager.CreateArchetype(typeof(RigidBody));
         var spawnedEntity = EntityManager.Instantiate(GameManager.GetInstance().blobUnitPrefab);
         EntityManager.AddComponentData(spawnedEntity,
             new Translation {Value = GameManager.GetInstance().spawnPosition});

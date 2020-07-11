@@ -48,7 +48,9 @@ namespace Utils
         /// <returns></returns>
         public static EntityManager GetCurrentEntityManager()
         {
-            return _manager ?? (_manager = World.DefaultGameObjectInjectionWorld.EntityManager);
+            if (_manager != null)
+                return _manager;
+            return _manager = World.DefaultGameObjectInjectionWorld.EntityManager;
         }
 
         // get current world
