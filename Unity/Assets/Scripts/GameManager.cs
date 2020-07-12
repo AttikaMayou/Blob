@@ -1,22 +1,34 @@
 ﻿using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Serialization;
+using Utils;
 
 //Author : Attika
 
 public class GameManager : MonoBehaviour
 {
-    // game variables
+    
+    #region Public Variables
+    [Header("Spawn Parameters")] 
+    public float3 spawnPosition;
+    
     [Header ("Game Parameters")]
-    public int entitiesInEnvironment;
     public int nbEntitiesOnFirstRing;
     public float toleranceDistance;
-    [FormerlySerializedAs("blobSpeed")] public float blobIdleSpeed;
-    [FormerlySerializedAs("blobRadius")] public float blobIdleRadius;
 
+    [Header("State Parameters")]
+    public float blobIdleSpeed;
+    public float blobLiquidSpeed;
+    public float blobViscousSpeed;
+    public float blobIdleRadius;
+    public float blobLiquidRadius;
+    public float blobViscousRadius;
     public TextMeshProUGUI stateUpdate;
+    #endregion
+    private int _entitiesInEnvironment;
+    private int _blobCount;
     private const string StateText = "Current state : ";
-    
+
     // handle GameManager instance
     private static GameManager _instance;
     public static GameManager GetInstance()
@@ -25,11 +37,26 @@ public class GameManager : MonoBehaviour
     }
     private void Awake()
     {
-        _instance = this;
+        if (!_instance)
+            _instance = this;
+        
+        _instance._entitiesInEnvironment = BlobUtils.InitializeEntitiesInEnvironment();
     }
 
-    public static void UpdateStateFeedback(string state)
+    #region Public Methods
+    public void UpdateStateFeedback(string state)
     {
         _instance.stateUpdate.text = StateText + state;
     }
+
+    public void UpdateBlobCount(int nb)
+    {
+        _blobCount = nb;
+    }
+    
+    public int GetCurrentBlobCount()
+    {
+        return _blobCount;
+    }
+    #endregion
 }

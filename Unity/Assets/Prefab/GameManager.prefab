@@ -61,6 +61,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   currentBlobPositions: []
+  currentBlobStates: 
+  currentMajorState: 0
 --- !u!114 &475594305260657668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,8 +75,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e309aa760329f594c82e8ee161231906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blobUnitPrefab: {fileID: 4336627344096932457, guid: 2a20ef91302861d478e6c045523cbaa1,
+    type: 3}
+  spawnPosition:
+    x: 0
+    y: 6
+    z: 0
   entitiesInEnvironment: 6
   nbEntitiesOnFirstRing: 5
   toleranceDistance: 0.1
-  blobSpeed: 15
-  blobRadius: 0.5
+  blobIdleSpeed: 15
+  blobLiquidSpeed: 20
+  blobViscousSpeed: 10
+  blobIdleRadius: 1
+  blobLiquidRadius: 0.5
+  blobViscousRadius: 2
+  stateUpdate: {fileID: 0}

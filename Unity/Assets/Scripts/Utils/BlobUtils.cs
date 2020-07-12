@@ -4,6 +4,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using Unity.Physics;
 using Unity.Physics.Systems;
+using BlobState = Components.BlobInfosComponent.BlobState;
 
 //Author : Attika
 
@@ -18,7 +19,7 @@ namespace Utils
             if (!_instance)
                 _instance = this;
         }
-
+        
         #region Public Variables
         
         // Ground layer
@@ -27,6 +28,9 @@ namespace Utils
         //Current positions of all blobs
         public List<Vector4> currentBlobPositions;
         
+        //Current states of all blobs
+        public List<BlobState> currentBlobStates;
+        public BlobState currentMajorState;
         #endregion
 
         #region physics methods
@@ -154,7 +158,7 @@ namespace Utils
         
         #endregion
        
-        #region movement methods
+        #region gameplay methods
 
         /// <summary>
         /// Get the positions list to organize blobs
@@ -236,9 +240,11 @@ namespace Utils
             return positionList;
         }
 
-        public static void UpdateBlobPositions(List<float3> positions, List<float> radius)
+        // for each blob : keep track of position, radius and state 
+        public static void UpdateBlobPositions(List<float3> positions, List<float> radius, List<BlobState> states)
         {
             var updatedPositions = new List<Vector4>();
+            var updatedStates = new List<BlobState>();
             
             for(var i = 0; i < positions.Count; ++i)
             {
@@ -246,14 +252,38 @@ namespace Utils
                     positions[i].y,
                     positions[i].z, 
                     radius[i]));
+                updatedStates.Add(states[i]);
             }
 
             _instance.currentBlobPositions = updatedPositions;
+            _instance.currentBlobStates = updatedStates;
         }
 
         public static List<Vector4> GetBlobsCurrentPositions()
         {
             return _instance != null ? _instance.currentBlobPositions : null;
+        }
+        
+        public static List<BlobState> GetBlobCurrentStates()
+        {
+            return _instance != null ? _instance.currentBlobStates : null;
+        }
+
+        public static void UpdateMajorState(BlobState state)
+        {
+            GameManager.GetInstance().UpdateStateFeedback(state.ToString());
+            _instance.currentMajorState = state;
+        }
+
+        public static BlobState GetMajorState()
+        {
+            return _instance.currentMajorState;
+        }
+
+        public static int InitializeEntitiesInEnvironment()
+        {
+            GameManager.GetInstance().UpdateBlobCount(0);
+            return  GetCurrentEntityManager().GetAllEntities().Length;
         }
         
         #endregion
