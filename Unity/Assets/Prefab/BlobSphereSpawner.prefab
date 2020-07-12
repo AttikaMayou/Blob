@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6869877756152119673}
   - component: {fileID: 6869877756152119672}
   - component: {fileID: 6869877756152119559}
+  - component: {fileID: 5182850902008599408}
   m_Layer: 0
   m_Name: BlobSphereSpawner
   m_TagString: Untagged
@@ -108,3 +109,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
+--- !u!114 &5182850902008599408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6869877756152119557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f688d3492087b5748a46633d9cfc3c70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BlobEntityPrefab: {fileID: 4336627344096932457, guid: 2a20ef91302861d478e6c045523cbaa1,
+    type: 3}

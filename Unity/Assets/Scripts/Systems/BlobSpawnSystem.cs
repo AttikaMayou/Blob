@@ -12,24 +12,33 @@ public class BlobSpawnSystem : ComponentSystem
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            SpawnAnEntity(BlobState.Idle);
+            Entities.ForEach((ref PrefabEntityComponent prefabEntityComponent) =>
+            {
+                SpawnAnEntity(prefabEntityComponent.BlobEntityPrefab, BlobState.Idle);
+            });
         }
         
         if (Input.GetKeyDown(KeyCode.L))
         {
-            SpawnAnEntity(BlobState.Liquid);
+            Entities.ForEach((ref PrefabEntityComponent prefabEntityComponent) =>
+            {
+                SpawnAnEntity(prefabEntityComponent.BlobEntityPrefab, BlobState.Liquid);
+            });
         }
         
         if (Input.GetKeyDown(KeyCode.V))
         {
-            SpawnAnEntity(BlobState.Viscous);
+            Entities.ForEach((ref PrefabEntityComponent prefabEntityComponent) =>
+            {
+                SpawnAnEntity(prefabEntityComponent.BlobEntityPrefab, BlobState.Viscous);
+            });
         }
     }
 
-    private void SpawnAnEntity(BlobState state)
+    private void SpawnAnEntity(Entity prefab, BlobState state)
     {
         // spawn an entity
-        var spawnedEntity = EntityManager.Instantiate(GameManager.GetInstance().blobUnitPrefab);
+        var spawnedEntity = EntityManager.Instantiate(prefab);
         EntityManager.AddComponentData(spawnedEntity,
             new Translation {Value = GameManager.GetInstance().spawnPosition});
         EntityManager.AddComponentData(spawnedEntity,

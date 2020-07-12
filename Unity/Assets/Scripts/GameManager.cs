@@ -10,7 +10,6 @@ public class GameManager : MonoBehaviour
     
     #region Public Variables
     [Header("Spawn Parameters")] 
-    public GameObject blobUnitPrefab;
     public float3 spawnPosition;
     
     [Header ("Game Parameters")]
