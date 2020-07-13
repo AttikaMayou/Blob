@@ -82,9 +82,12 @@ MonoBehaviour:
     z: 0
   nbEntitiesOnFirstRing: 5
   toleranceDistance: 0.1
-  blobIdleSpeed: 15
+  blobIdleSpeed: 10
   blobLiquidSpeed: 20
-  blobViscousSpeed: 10
+  blobViscousSpeed: 2
+  idleSpeedMultiplier: 0.5
+  liquidSpeedMultiplier: 1
+  viscousSpeedMultiplier: 0.1
   blobIdleRadius: 1
   blobLiquidRadius: 0.5
   blobViscousRadius: 2
@@ -101,3 +104,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2bbb755ea0e05a4abccd1784973c304, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  instructions: {fileID: 0}

@@ -14,7 +14,7 @@ public class BlobSpawnSystem : ComponentSystem
         {
             Entities.ForEach((ref PrefabEntityComponent prefabEntityComponent) =>
             {
-                SpawnAnEntity(prefabEntityComponent.BlobEntityPrefab, BlobState.Idle);
+                SpawnAnEntity(prefabEntityComponent.BlobEntityPrefab, BlobState.Idle, GameManager.GetInstance().blobIdleSpeed, GameManager.GetInstance().idleSpeedMultiplier);
             });
         }
         
@@ -22,7 +22,7 @@ public class BlobSpawnSystem : ComponentSystem
         {
             Entities.ForEach((ref PrefabEntityComponent prefabEntityComponent) =>
             {
-                SpawnAnEntity(prefabEntityComponent.BlobEntityPrefab, BlobState.Liquid);
+                SpawnAnEntity(prefabEntityComponent.BlobEntityPrefab, BlobState.Liquid, GameManager.GetInstance().blobLiquidSpeed, GameManager.GetInstance().liquidSpeedMultiplier);
             });
         }
         
@@ -30,19 +30,21 @@ public class BlobSpawnSystem : ComponentSystem
         {
             Entities.ForEach((ref PrefabEntityComponent prefabEntityComponent) =>
             {
-                SpawnAnEntity(prefabEntityComponent.BlobEntityPrefab, BlobState.Viscous);
+                SpawnAnEntity(prefabEntityComponent.BlobEntityPrefab, BlobState.Viscous, GameManager.GetInstance().blobViscousSpeed,GameManager.GetInstance().viscousSpeedMultiplier);
             });
         }
     }
 
-    private void SpawnAnEntity(Entity prefab, BlobState state)
+    private void SpawnAnEntity(Entity prefab, BlobState state, float speed, float multiplier)
     {
         // spawn an entity
         var spawnedEntity = EntityManager.Instantiate(prefab);
-        EntityManager.AddComponentData(spawnedEntity,
+        EntityManager.SetComponentData(spawnedEntity,
             new Translation {Value = GameManager.GetInstance().spawnPosition});
-        EntityManager.AddComponentData(spawnedEntity,
+        EntityManager.SetComponentData(spawnedEntity,
             new BlobInfosComponent {blobUnitState = state});
+        EntityManager.SetComponentData(spawnedEntity, 
+            new BlobUnitMovement{moveSpeed = speed, moveMultiplier = multiplier});
         
         // update current number of blobs in scene
         GameManager.GetInstance().UpdateBlobCount(GameManager.GetInstance().GetCurrentBlobCount() + 1);

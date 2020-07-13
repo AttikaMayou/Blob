@@ -22,12 +22,13 @@ public class MoverSystem : JobComponentSystem
             if (!movement.move) return;
                 
             // while move is true, if blob didnt reach his target position
-            if (math.distance(translation.Value, movement.position) > ReachedPosition)
+            if (math.distance(translation.Value.x, movement.position.x) > ReachedPosition 
+                && math.distance(translation.Value.z, movement.position.z) > ReachedPosition)
             {
                 // get the normalized direction vector
                 var moveDir = math.normalize(movement.position - translation.Value);
                 // move blob by updating his position
-                translation.Value += (moveDir * movement.moveSpeed * DeltaTime) * Random.NextFloat(0.1f, 1.0f);
+                translation.Value += (moveDir * movement.moveSpeed * DeltaTime) * Random.NextFloat(0.1f, movement.moveMultiplier);
             }
             // if blob reached his target position
             else

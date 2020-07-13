@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
     public float blobIdleSpeed;
     public float blobLiquidSpeed;
     public float blobViscousSpeed;
+    public float idleSpeedMultiplier;
+    public float liquidSpeedMultiplier;
+    public float viscousSpeedMultiplier;
     public float blobIdleRadius;
     public float blobLiquidRadius;
     public float blobViscousRadius;
