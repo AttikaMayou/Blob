@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 475594305260657665}
   - component: {fileID: 475594305260657667}
   - component: {fileID: 475594305260657668}
+  - component: {fileID: 6015496963288570027}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -75,13 +76,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e309aa760329f594c82e8ee161231906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blobUnitPrefab: {fileID: 4336627344096932457, guid: 2a20ef91302861d478e6c045523cbaa1,
-    type: 3}
   spawnPosition:
     x: 0
     y: 6
     z: 0
-  entitiesInEnvironment: 6
   nbEntitiesOnFirstRing: 5
   toleranceDistance: 0.1
   blobIdleSpeed: 15
@@ -91,3 +89,15 @@ MonoBehaviour:
   blobLiquidRadius: 0.5
   blobViscousRadius: 2
   stateUpdate: {fileID: 0}
+--- !u!114 &6015496963288570027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 475594305260657664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2bbb755ea0e05a4abccd1784973c304, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

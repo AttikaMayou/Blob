@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     public float blobViscousRadius;
     public TextMeshProUGUI stateUpdate;
     #endregion
-    private int _entitiesInEnvironment;
+    
     private int _blobCount;
     private const string StateText = "Current state : ";
 
@@ -39,8 +39,6 @@ public class GameManager : MonoBehaviour
     {
         if (!_instance)
             _instance = this;
-        
-        _instance._entitiesInEnvironment = BlobUtils.InitializeEntitiesInEnvironment();
     }
 
     #region Public Methods
