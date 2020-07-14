@@ -1,5 +1,6 @@
 ﻿using Components;
 using Unity.Entities;
+using Unity.Transforms;
 using Utils;
 using BlobState = Components.BlobInfosComponent.BlobState;
 
@@ -12,16 +13,24 @@ public class BlobStateSystem : ComponentSystem
     protected override void OnUpdate()
     {
         BlobUtils.UpdateMajorState(ChooseState());
+        
+        Entities.WithAll<BlobUnitedComponent, BlobInfosComponent>().ForEach((Entity entity, ref BlobUnitedComponent blobUnited, ref BlobInfosComponent blobInfos) =>
+        {
+            if (blobUnited.united)
+            {
+                blobInfos.blobUnitState = BlobUtils.GetMajorState();
+            }
+        });
     }
 
     private BlobState ChooseState()
     {
-        GameManager.GetInstance().GetBlobCounts(out var _idleBlobs, out var _liquidBlobs, out var _viscousBlobs);
+        GameManager.GetInstance().GetBlobCounts(out var idleBlobs, out var liquidBlobs, out var viscousBlobs);
 
-        if(_idleBlobs >= _liquidBlobs && _idleBlobs >= _viscousBlobs)
+        if(idleBlobs >= liquidBlobs && idleBlobs >= viscousBlobs)
             return BlobState.Idle;
         
-        if (_liquidBlobs >= _idleBlobs && _liquidBlobs >= _viscousBlobs)
+        if (liquidBlobs >= idleBlobs && liquidBlobs >= viscousBlobs)
             return BlobState.Liquid;
         
         return BlobState.Viscous;

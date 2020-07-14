@@ -24,10 +24,11 @@ public class BlobCounterSystem : ComponentSystem
         var united = new List<bool>();
         
         // for each on all entities that have translation, scale AND blob infos components
-        Entities.WithAll<Translation, BlobInfosComponent>().ForEach((Entity entity, BlobInfosComponent infos, ref Translation translation) =>
+        Entities.WithAll<Translation, BlobInfosComponent, BlobUnitedComponent>().ForEach((Entity entity, ref BlobInfosComponent infos, ref Translation translation, ref BlobUnitedComponent blobUnited) =>
         {
             positions.Add(translation.Value);
             states.Add(infos.blobUnitState);
+            united.Add(blobUnited.united);
             switch (infos.blobUnitState)
             {
                 case BlobState.Idle:
@@ -45,6 +46,6 @@ public class BlobCounterSystem : ComponentSystem
             }
         });
         
-        BlobUtils.UpdateBlobPositions(positions, radius, states);
+        BlobUtils.UpdateBlobPositions(positions, radius, states, united);
     }
 }

@@ -7,7 +7,7 @@ namespace Components
 {
     [Serializable]
     [GenerateAuthoringComponent]
-    public class BlobUnitedComponent : IComponentData
+    public struct BlobUnitedComponent : IComponentData
     {
         public bool united;
     }

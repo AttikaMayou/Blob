@@ -19,7 +19,8 @@ public class GameManager : MonoBehaviour
     public int nbEntitiesOnFirstRing;
     public float toleranceDistance;
 
-    [Header("State Parameters")]
+    [Header("State Parameters")] 
+    public float changeStateSpeed;
     public float blobIdleSpeed;
     public float blobLiquidSpeed;
     public float blobViscousSpeed;

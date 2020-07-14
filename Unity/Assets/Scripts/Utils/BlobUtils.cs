@@ -31,6 +31,9 @@ namespace Utils
         //Current states of all blobs
         public List<BlobState> currentBlobStates;
         public BlobState currentMajorState;
+        
+        //Current united component of all blobs
+        public List<bool> currentBlobUnited;
         #endregion
 
         #region physics methods
@@ -241,10 +244,11 @@ namespace Utils
         }
 
         // for each blob : keep track of position, radius and state 
-        public static void UpdateBlobPositions(List<float3> positions, List<float> radius, List<BlobState> states)
+        public static void UpdateBlobPositions(List<float3> positions, List<float> radius, List<BlobState> states, List<bool> united)
         {
             var updatedPositions = new List<Vector4>();
             var updatedStates = new List<BlobState>();
+            var updatedUnited = new List<bool>();
             
             for(var i = 0; i < positions.Count; ++i)
             {
@@ -253,10 +257,12 @@ namespace Utils
                     positions[i].z, 
                     radius[i]));
                 updatedStates.Add(states[i]);
+                updatedUnited.Add(united[i]);
             }
 
             _instance.currentBlobPositions = updatedPositions;
             _instance.currentBlobStates = updatedStates;
+            _instance.currentBlobUnited = updatedUnited;
         }
 
         public static List<Vector4> GetBlobsCurrentPositions()
