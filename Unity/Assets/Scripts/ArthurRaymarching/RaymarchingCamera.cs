@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using Utils;
 using UnityEngine.Rendering;
+using BlobState = Components.BlobInfosComponent.BlobState;
+using UnityEditor;
 
 [RequireComponent(typeof(Camera))]
 public class RaymarchingCamera : SceneViewFilter
@@ -68,14 +70,20 @@ public class RaymarchingCamera : SceneViewFilter
     public Cubemap _reflectionCube;
 
     [Header("Color")]
-    public Gradient _sphereGradiant;
+    public Gradient _gradiantViscous;
+    public Gradient _gradiantIdle;
+    public Gradient _gradiantLiquid;
     private Color[] _sphereColor;
     [Range(0, 4)] public float _colorIntensity;
 
     [Header("SDF")]
     public Slider smoothSlider;
     [Range(0, 10)] public float _sphereSmooth = 0.7f;
-    
+
+    public int nbLiquid = 0;
+    public int nbViscous = 0;
+    public int nbIdle = 0;
+
     [ImageEffectOpaque]
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
@@ -96,14 +104,38 @@ public class RaymarchingCamera : SceneViewFilter
 
         Color[] pos = new Color[nbSphere];
 
+        //Proportionnal radius
+        GameManager gm = GameManager.GetInstance();
+        gm.GetBlobCounts(out nbIdle, out nbLiquid, out nbViscous);
+
+        float radius = 0;
+        if (nbSphere != 0)
+            radius = (gm.blobLiquidRadius * nbLiquid / nbSphere) +
+                     (gm.blobIdleRadius * nbIdle / nbSphere) + 
+                     (gm.blobViscousRadius * nbViscous / nbSphere);
+
         for (int i = 0; i < nbSphere; i++)
         {
+            
             _spheresPos.SetPixel(i, 0, new Color(BlobUtils.GetBlobsCurrentPositions()[i].x * 0.001f,
                                                  BlobUtils.GetBlobsCurrentPositions()[i].y * 0.001f,
                                                  BlobUtils.GetBlobsCurrentPositions()[i].z * 0.001f,
-                                                 BlobUtils.GetBlobsCurrentPositions()[i].w * 0.001f));
-            _colors.SetPixel(i, 0, _sphereGradiant.Evaluate(1f / 8 * (i % 8)));
+                                                 radius * 0.001f));
 
+            switch (BlobUtils.GetBlobCurrentStates()[i])
+            {
+                case BlobState.Liquid:
+                    _colors.SetPixel(i, 0, _gradiantLiquid.Evaluate(1f / 8 * (i % 8)));
+                    break;
+
+                case BlobState.Viscous:
+                    _colors.SetPixel(i, 0, _gradiantViscous.Evaluate(1f / 8 * (i % 8)));
+                    break;
+
+                default:
+                    _colors.SetPixel(i, 0, _gradiantIdle.Evaluate(1f / 8 * (i % 8)));
+                    break;
+            }
         }
         _spheresPos.Apply();
         _colors.Apply();
