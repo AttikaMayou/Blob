@@ -8,8 +8,7 @@ using BlobState = Components.BlobInfosComponent.BlobState;
 
 //Author : Attika
 
-// This system update positions, radius and color for all spawned blobs. 
-// It also keeps count of how much entity of each state are currently spawned.
+// This system update positions, radius and states tracked infos for all spawned blobs.
 
 public class BlobCounterSystem : ComponentSystem
 {
@@ -21,28 +20,14 @@ public class BlobCounterSystem : ComponentSystem
         var positions = new List<float3>();
         var radius = new List<float>();
         var states = new List<BlobState>();
-        var united = new List<bool>();
         
         // for each on all entities that have translation, scale AND blob infos components
-        Entities.WithAll<Translation, BlobInfosComponent>().ForEach((Entity entity, BlobInfosComponent infos, ref Translation translation) =>
+        Entities.WithAll<Translation, BlobInfosComponent, BlobUnitedComponent>().ForEach((Entity entity,
+            ref Translation translation, ref BlobInfosComponent infos,  ref BlobUnitedComponent blobUnited) =>
         {
             positions.Add(translation.Value);
+            radius.Add(blobUnited.radiusValue);
             states.Add(infos.blobUnitState);
-            switch (infos.blobUnitState)
-            {
-                case BlobState.Idle:
-                    radius.Add(GameManager.GetInstance().blobIdleRadius);
-                    break;
-                case BlobState.Liquid:
-                    radius.Add(GameManager.GetInstance().blobLiquidRadius);
-                    break;
-                case BlobState.Viscous:
-                    radius.Add(GameManager.GetInstance().blobViscousRadius);
-                    break;
-                default:
-                    radius.Add(GameManager.GetInstance().blobIdleRadius);
-                    break;
-            }
         });
         
         BlobUtils.UpdateBlobPositions(positions, radius, states);

@@ -7,7 +7,7 @@ namespace Components
 {
     [Serializable]
     [GenerateAuthoringComponent]
-    public class BlobInfosComponent : IComponentData
+    public struct BlobInfosComponent : IComponentData
     {
         public enum BlobState
         {

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4917116742034415888}
   - component: {fileID: 4917116742034415890}
   - component: {fileID: 4917116742034415891}
+  - component: {fileID: 9122016393575474983}
   - component: {fileID: 5513240119403114672}
   m_Layer: 10
   m_Name: BlobLiquidSphere
@@ -32,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 4917116742034415881}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -145,6 +146,19 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+--- !u!114 &9122016393575474983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4917116742034415881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f11410c30c0fb148b33c436a9c6dd56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  united: 0
 --- !u!114 &5513240119403114672
 MonoBehaviour:
   m_ObjectHideFlags: 0

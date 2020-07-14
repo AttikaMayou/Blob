@@ -32,10 +32,10 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI stateUpdate;
     #endregion
     
-    private int _blobCount;
-    private int _idleCount;
-    private int _liquidCount;
-    private int _viscousCount;
+    private int _blobCount = 0;
+    private int _idleCount = 0;
+    private int _liquidCount = 0;
+    private int _viscousCount = 0;
     private const string StateText = "Current state : ";
 
     // handle GameManager instance

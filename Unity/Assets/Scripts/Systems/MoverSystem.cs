@@ -7,20 +7,24 @@ using Unity.Transforms;
 
 //Author : Attika
 
+//This system update position of blobs to desired direction
+
 public class MoverSystem : JobComponentSystem
 {
     [BurstCompile]
-    private struct MoverSystemJob : IJobForEach<Translation, BlobUnitMovement>
+    private struct MoverSystemJob : IJobForEach<Translation, BlobUnitMovement, BlobUnitedComponent>
     {
         // variable of this job
         public float DeltaTime; // current time in game
         public float ReachedPosition; // tolerance between target position and current blob position
         public Random Random; //Unity Mathematics Random variable to get random within a job
         
-        public void Execute(ref Translation translation, ref BlobUnitMovement movement)
+        public void Execute(ref Translation translation, ref BlobUnitMovement movement, ref BlobUnitedComponent blobUnited)
         {
             if (!movement.move) return;
-                
+
+            blobUnited.distanceToOthers = math.distance(translation.Value, movement.position);
+            
             // while move is true, if blob didnt reach his target position
             if (math.distance(translation.Value.x, movement.position.x) > ReachedPosition 
                 && math.distance(translation.Value.z, movement.position.z) > ReachedPosition)

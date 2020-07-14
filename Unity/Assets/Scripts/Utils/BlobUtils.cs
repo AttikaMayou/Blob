@@ -31,6 +31,8 @@ namespace Utils
         //Current states of all blobs
         public List<BlobState> currentBlobStates;
         public BlobState currentMajorState;
+        
+        public float currentMediumRadius;
         #endregion
 
         #region physics methods
@@ -278,6 +280,23 @@ namespace Utils
         public static BlobState GetMajorState()
         {
             return _instance.currentMajorState;
+        }
+
+        public static void CalculateMediumRadius()
+        {
+            var nbBlob = GameManager.GetInstance().GetCurrentBlobCount();
+            GameManager.GetInstance().GetBlobCounts(out var idleFactor, out var liquidFactor, out var viscousFactor);
+            
+            var medium = (GameManager.GetInstance().blobIdleRadius * idleFactor / nbBlob) +
+                         (GameManager.GetInstance().blobLiquidRadius * liquidFactor / nbBlob) +
+                         (GameManager.GetInstance().blobViscousRadius * viscousFactor / nbBlob);
+
+            _instance.currentMediumRadius = medium;
+        }
+
+        public static float GetMediumRadius()
+        {
+            return _instance.currentMediumRadius;
         }
         
         #endregion
