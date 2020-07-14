@@ -112,7 +112,7 @@
 				for (int i = 1; i < _nbSphere; i++)
 				{
 					//Distance
-					sphereAdd = float4(tex1Dlod(_sphereColor, i * q).rgb, sdSphere(p - tex1Dlod(_spheres, i * q).xyz * 1000.0, tex1Dlod(_spheres, i * q).w * 1000.0));
+					sphereAdd = float4(tex1Dlod(_sphereColor, 0).rgb, sdSphere(p - tex1Dlod(_spheres, i * q).xyz * 1000.0, tex1Dlod(_spheres, i * q).w * 1000.0));
 				
 					result = opUS(result, sphereAdd, _sphereSmooth);
 				}

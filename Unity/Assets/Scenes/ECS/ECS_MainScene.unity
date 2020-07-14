@@ -1311,7 +1311,7 @@ Light:
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
-    m_Resolution: -1
+    m_Resolution: 3
     m_CustomResolution: -1
     m_Strength: 1
     m_Bias: 0.8
@@ -1535,7 +1535,7 @@ MonoBehaviour:
   _reflectionIntensity: 0.296
   _envReflectionIntensity: 0.024
   _reflectionCube: {fileID: 8900000, guid: 34ecf341d6c6df54e8afa62941a69f31, type: 3}
-  _gradiantViscous:
+  _gradiantViscious:
     serializedVersion: 2
     key0: {r: 0.050980363, g: 0.9529412, b: 0.48999378, a: 1}
     key1: {r: 0.19733606, g: 0.745283, b: 0.15819688, a: 1}
@@ -1624,6 +1624,7 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   _colorIntensity: 1
   _sphereSmooth: 0.3
+  _sphereSmoothIdle: 0.5
   _sphereSmoothViscious: 0.2
   _sphereSmoothLiquid: 1.5
 --- !u!114 &1392328693

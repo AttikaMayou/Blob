@@ -70,7 +70,7 @@ public class RaymarchingCamera : SceneViewFilter
     public Cubemap _reflectionCube;
 
     [Header("Color")]
-    public Gradient _gradiant;
+    public Gradient _gradiantViscious;
     public Gradient _gradiantIdle;
     public Gradient _gradiantLiquid;
     private Color[] _sphereColor;
@@ -78,7 +78,8 @@ public class RaymarchingCamera : SceneViewFilter
 
     [Header("SDF")]
    // public Slider smoothSlider;
-    public float _sphereSmooth = 0.70f;
+    public float _sphereSmooth = 0.00f;
+    public float _sphereSmoothIdle = 0.50f;
     public float _sphereSmoothViscious = 0.20f;
     public float _sphereSmoothLiquid = 0.70f;
 
@@ -87,11 +88,8 @@ public class RaymarchingCamera : SceneViewFilter
     private int nbIdle = 0;
 
     private Color color;
-    private float newRadius = 0;
     private float t = 0;
-    private List<float> oldRadius = new List<float>();
-    private float startGradiant = 0.0f;
-    private float gradiant = 0.0f;
+
 
     [ImageEffectOpaque]
     void OnRenderImage(RenderTexture source, RenderTexture destination)
@@ -107,58 +105,16 @@ public class RaymarchingCamera : SceneViewFilter
         _spheresPos.filterMode = FilterMode.Point;
         _spheresPos.wrapMode = TextureWrapMode.Clamp;
 
-        Texture2D _colors = new Texture2D(nbSphere, 1, TextureFormat.RGBA32, false);
+        Texture2D _colors = new Texture2D(1, 1, TextureFormat.RGBA32, false);
         _spheresPos.filterMode = FilterMode.Point;
         _spheresPos.wrapMode = TextureWrapMode.Clamp;
 
         Color[] pos = new Color[nbSphere];
 
-        //Color
-        if (nbSphere != 0)
-        {
-            switch (BlobUtils.GetBlobCurrentStates()[0])
-            {
-                case BlobState.Liquid:
-                    startGradiant = Random.Range(10 / 100, 45 / 100);
-                    break;
-
-                case BlobState.Viscous:
-                    startGradiant = Random.Range(46 / 100, 80 / 100);
-                    break;
-
-                default:
-                    startGradiant = Random.Range(81 / 100, (110 / 100) % 1);
-                    break;
-            }
-        }
-
-        if (nbSphere < 1)
-        {
-            switch (BlobUtils.GetBlobCurrentStates()[nbSphere - 1])
-            {
-                case BlobState.Liquid:
-                    startGradiant = Random.Range(10 / 100, 45 / 100);
-                    break;
-
-                case BlobState.Viscous:
-                    startGradiant = Random.Range(46 / 100, 80 / 100);
-                    break;
-
-                default:
-                    startGradiant = Random.Range(81 / 100, (110 / 100) % 1);
-                    break;
-            }
-        }
-
-
         //Proportionnal radius
         GameManager gm = GameManager.GetInstance();
         gm.GetBlobCounts(out nbIdle, out nbLiquid, out nbViscous);
-
-        if (nbSphere != 0)
-            newRadius = (gm.blobLiquidRadius * nbLiquid / nbSphere) +
-                     (gm.blobIdleRadius * nbIdle / nbSphere) + 
-                     (gm.blobViscousRadius * nbViscous / nbSphere);
+        color = new Color();
 
         for (int i = 0; i < nbSphere; i++)
         {
@@ -168,23 +124,24 @@ public class RaymarchingCamera : SceneViewFilter
                                                  BlobUtils.GetBlobsCurrentPositions()[i].y * 0.001f,
                                                  BlobUtils.GetBlobsCurrentPositions()[i].z * 0.001f,
                                                  BlobUtils.GetBlobsCurrentPositions()[i].w * 0.001f));
-            //Première couleur : BaseColor
+            //Moyenne des couleurs
             switch (BlobUtils.GetBlobCurrentStates()[i])
             {
                 case BlobState.Liquid:
-                    //startGradiant
-                    _colors.SetPixel(i, 0, _gradiantLiquid.Evaluate(1f / 8 * (i % 8)));
+                    color += _gradiantLiquid.Evaluate(1f / 8 * (i % 8));
                     break;
 
                 case BlobState.Viscous:
-                    _colors.SetPixel(i, 0, _gradiant.Evaluate(1f / 8 * (i % 8)));
+                    color += _gradiantViscious.Evaluate(1f / 8 * (i % 8));
                     break;
 
                 default:
-                    _colors.SetPixel(i, 0, _gradiantIdle.Evaluate(1f / 8 * (i % 8)));
+                    color += _gradiantIdle.Evaluate(1f / 8 * (i % 8));
                     break;
             }
         }
+
+        _colors.SetPixel(0, 0, color / nbSphere);
 
         //Pour le lerp
         if (nbSphere != 0 && t <= 0.999)

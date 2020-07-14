@@ -33,7 +33,7 @@ Transform:
   m_GameObject: {fileID: 786957358139192252}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -55,7 +55,7 @@ MeshRenderer:
   m_GameObject: {fileID: 786957358139192252}
   m_Enabled: 1
   m_CastShadows: 3
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -158,7 +158,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f11410c30c0fb148b33c436a9c6dd56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radiusValue: 0
   united: 0
+  needUpdate: 0
+  distanceToOthers: 0
+  lerpTime: 0
 --- !u!114 &167821476410827269
 MonoBehaviour:
   m_ObjectHideFlags: 0
