@@ -2685,6 +2685,11 @@ PrefabInstance:
       propertyPath: stateUpdate
       value: 
       objectReference: {fileID: 2111020573}
+    - target: {fileID: 475594305260657668, guid: 4159d3391f201ed43a1663f13917219a,
+        type: 3}
+      propertyPath: changeStateSpeed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6015496963288570027, guid: 4159d3391f201ed43a1663f13917219a,
         type: 3}
       propertyPath: instructions

@@ -50,9 +50,8 @@ public class RaycastSelectSystem : ComponentSystem
             Entities.WithAll<BlobUnitMovement, BlobUnitedComponent>().ForEach((Entity entity, ref BlobUnitMovement blobUnitMovement, ref BlobUnitedComponent blobUnited) =>
             {       
                 // update united status
-                //PostUpdateCommands.AddComponent(entity, new BlobUnitedComponent { united = true});
                 blobUnited.united = true;
-                
+
                 // move blobs
                 blobUnitMovement.position = targetPositions[positionIndex];
                 positionIndex = (positionIndex + 1) % targetPositions.Count;

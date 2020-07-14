@@ -83,7 +83,7 @@ MonoBehaviour:
     z: 0
   nbEntitiesOnFirstRing: 5
   toleranceDistance: 0.1
-  changeStateSpeed: 0.5
+  changeStateSpeed: 1
   blobIdleSpeed: 10
   blobLiquidSpeed: 20
   blobViscousSpeed: 2

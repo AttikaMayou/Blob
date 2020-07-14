@@ -8,8 +8,7 @@ using BlobState = Components.BlobInfosComponent.BlobState;
 
 //Author : Attika
 
-// This system update positions, radius and color tracked infos for all spawned blobs. 
-// It also lerp blob's radius to target one
+// This system update positions, radius and states tracked infos for all spawned blobs.
 
 public class BlobCounterSystem : ComponentSystem
 {
@@ -21,120 +20,14 @@ public class BlobCounterSystem : ComponentSystem
         var positions = new List<float3>();
         var radius = new List<float>();
         var states = new List<BlobState>();
-
-        var targetRadius = BlobUtils.GetMediumRadius();
-        var speedChange = GameManager.GetInstance().changeStateSpeed;
         
         // for each on all entities that have translation, scale AND blob infos components
-        Entities.WithAll<Translation, /*Scale,*/ BlobInfosComponent, BlobUnitedComponent>().ForEach((Entity entity,
-            ref Translation translation,/* ref Scale scale,*/ ref BlobInfosComponent infos,  ref BlobUnitedComponent blobUnited) =>
+        Entities.WithAll<Translation, BlobInfosComponent, BlobUnitedComponent>().ForEach((Entity entity,
+            ref Translation translation, ref BlobInfosComponent infos,  ref BlobUnitedComponent blobUnited) =>
         {
             positions.Add(translation.Value);
+            radius.Add(blobUnited.radiusValue);
             states.Add(infos.blobUnitState);
-            switch (infos.blobUnitState)
-            {
-                case BlobState.Idle:
-                    if (blobUnited.united)
-                    {
-                        var radiusLerp = targetRadius;
-                        if (blobUnited.lerpTime <= speedChange)
-                        {
-                            blobUnited.lerpTime += Time.DeltaTime;
-                            
-                            // lerp to medium radius since blob is "united" to others
-                            radiusLerp= math.lerp(GameManager.GetInstance().blobIdleRadius, targetRadius,
-                                blobUnited.lerpTime);
-                        }
-                        else
-                        {
-                            blobUnited.lerpTime = 0.0f;
-                        }
-                        radius.Add(radiusLerp);
-                        //scale.Value = radiusLerp;
-                    }
-                    else
-                    {
-                        radius.Add(GameManager.GetInstance().blobIdleRadius);
-                    }
-                    break;
-                
-                case BlobState.Liquid:
-                    if (blobUnited.united)
-                    {
-                        var radiusLerp = targetRadius;
-                        if (blobUnited.lerpTime <= speedChange)
-                        {
-                            blobUnited.lerpTime += Time.DeltaTime;
-                            
-                            // lerp to medium radius since blob is "united" to others
-                            radiusLerp= math.lerp(GameManager.GetInstance().blobLiquidRadius, targetRadius,
-                                blobUnited.lerpTime);
-                        }
-                        else
-                        {
-                            blobUnited.lerpTime = 0.0f;
-                        }
-                        radius.Add(radiusLerp);
-                        //scale.Value = radiusLerp;
-                    }
-                    else
-                    {
-                        radius.Add(GameManager.GetInstance().blobLiquidRadius);
-                    }
-                    break;
-                
-                case BlobState.Viscous:
-                    if (blobUnited.united)
-                    {
-                        var radiusLerp = targetRadius;
-                        if (blobUnited.lerpTime <= speedChange)
-                        {
-                            blobUnited.lerpTime += Time.DeltaTime;
-                            
-                            // lerp to medium radius since blob is "united" to others
-                            radiusLerp= math.lerp(GameManager.GetInstance().blobViscousRadius, targetRadius,
-                                blobUnited.lerpTime);
-                        }
-                        else
-                        {
-                            blobUnited.lerpTime = 0.0f;
-                        }
-                        radius.Add(radiusLerp);
-                        //scale.Value = radiusLerp;
-                    }
-                    else
-                    {
-                        radius.Add(GameManager.GetInstance().blobLiquidRadius);
-                    }
-                    break;
-                
-                default:
-                    if (blobUnited.united)
-                    {
-                        var radiusLerp = targetRadius;
-                        if (blobUnited.lerpTime <= speedChange)
-                        {
-                            blobUnited.lerpTime += Time.DeltaTime;
-                            
-                            // lerp to medium radius since blob is "united" to others
-                            radiusLerp= math.lerp(GameManager.GetInstance().blobIdleRadius, targetRadius,
-                                blobUnited.lerpTime);
-                        }
-                        else
-                        {
-                            blobUnited.lerpTime = 0.0f;
-                        }
-                        radius.Add(radiusLerp);
-                        //scale.Value = radiusLerp;
-                    }
-                    else
-                    {
-                        radius.Add(GameManager.GetInstance().blobIdleRadius);
-                    }
-                    break;
-            }
-           
-            
         });
         
         BlobUtils.UpdateBlobPositions(positions, radius, states);
