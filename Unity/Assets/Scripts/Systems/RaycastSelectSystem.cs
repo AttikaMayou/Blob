@@ -74,23 +74,5 @@ public class RaycastSelectSystem : ComponentSystem
                 blobUnitMovement.move = true;
             });
         }
-            
-        // Attract blobs
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            var position = BlobUtils.GetGroundPosition(out var haveHit);
-
-            if (!haveHit) return;
-
-        }
-            
-        // Give an impulse away to blobs
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            var position = BlobUtils.GetGroundPosition(out var haveHit);
-
-            if (!haveHit) return;
-        }
-            
     }
 }
