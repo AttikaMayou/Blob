@@ -1314,7 +1314,7 @@ Light:
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
-    m_Bias: 0.7
+    m_Bias: 0.8
     m_NormalBias: 0
     m_NearPlane: 0.1
     m_CullingMatrixOverride:
@@ -1625,6 +1625,9 @@ MonoBehaviour:
   _colorIntensity: 1
   smoothSlider: {fileID: 0}
   _sphereSmooth: 0.3
+  nbLiquid: 0
+  nbViscous: 0
+  nbIdle: 0
 --- !u!114 &1392328693
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -77,12 +77,14 @@ public class RaymarchingCamera : SceneViewFilter
     [Range(0, 4)] public float _colorIntensity;
 
     [Header("SDF")]
-    public Slider smoothSlider;
-    [Range(0, 10)] public float _sphereSmooth = 0.7f;
+   // public Slider smoothSlider;
+    public float _sphereSmooth = 0.7f;
+    public float _sphereSmoothViscious = 0.2f;
+    public float _sphereSmoothLiquid = 0.7f;
 
-    public int nbLiquid = 0;
-    public int nbViscous = 0;
-    public int nbIdle = 0;
+    private int nbLiquid = 0;
+    private int nbViscous = 0;
+    private int nbIdle = 0;
 
     private float radius = 0;
     private float newRadius = 0;
@@ -126,7 +128,6 @@ public class RaymarchingCamera : SceneViewFilter
                      (gm.blobIdleRadius * nbIdle / nbSphere) + 
                      (gm.blobViscousRadius * nbViscous / nbSphere);
 
-
         for (int i = 0; i < nbSphere; i++)
         {
             radius = Mathf.Lerp(oldRadius[i], newRadius, t);
@@ -135,7 +136,7 @@ public class RaymarchingCamera : SceneViewFilter
                                                  BlobUtils.GetBlobsCurrentPositions()[i].y * 0.001f,
                                                  BlobUtils.GetBlobsCurrentPositions()[i].z * 0.001f,
                                                  radius * 0.001f));
-            Debug.Log(radius);
+
             switch (BlobUtils.GetBlobCurrentStates()[i])
             {
                 case BlobState.Liquid:
@@ -160,6 +161,22 @@ public class RaymarchingCamera : SceneViewFilter
 
         _spheresPos.Apply();
         _colors.Apply();
+
+        //SmoothFunction
+        switch (BlobUtils.GetMajorState())
+        {
+            case BlobState.Liquid:
+                _sphereSmooth = _sphereSmoothLiquid;
+                break;
+
+            case BlobState.Viscous:
+                _sphereSmooth = _sphereSmoothViscious;
+                break;
+
+            default:
+                _sphereSmooth = _sphereSmooth;
+                break;
+        }
 
         // Camera
         _raymarchMaterial.SetMatrix("_CamFrustum", GetFrustumCorners(_camera));
@@ -279,10 +296,6 @@ public class RaymarchingCamera : SceneViewFilter
 
     #region UI_FUNCTIONS
 
-    public void UpdateSphereSmooth()
-    {
-        _sphereSmooth = smoothSlider.value;
-    }
 
     public void UpdateReflectionCount()
     {
