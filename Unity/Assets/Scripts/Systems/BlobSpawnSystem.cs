@@ -47,7 +47,7 @@ public class BlobSpawnSystem : ComponentSystem
             new BlobUnitMovement{moveSpeed = speed, moveMultiplier = multiplier});
         
         // update current number of blobs in scene
-        GameManager.GetInstance().UpdateBlobCount(GameManager.GetInstance().GetCurrentBlobCount() + 1);
+        GameManager.GetInstance().UpdateBlobCount(GameManager.GetInstance().GetCurrentBlobCount() + 1, state);
 
     }
 }

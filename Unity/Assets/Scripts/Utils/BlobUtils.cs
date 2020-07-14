@@ -279,12 +279,6 @@ namespace Utils
         {
             return _instance.currentMajorState;
         }
-
-        public static int InitializeEntitiesInEnvironment()
-        {
-            GameManager.GetInstance().UpdateBlobCount(0);
-            return  GetCurrentEntityManager().GetAllEntities().Length;
-        }
         
         #endregion
 

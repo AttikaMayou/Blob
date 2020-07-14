@@ -48,7 +48,11 @@ public class RaycastSelectSystem : ComponentSystem
             // assign positions and move speed to all blob units
             var positionIndex = 0;
             Entities.WithAll<BlobUnitMovement>().ForEach((Entity entity, ref BlobUnitMovement blobUnitMovement) =>
-            {
+            {       
+                // update united status
+                PostUpdateCommands.AddComponent(entity, new BlobUnitedComponent { united = true});
+                
+                // move blobs
                 blobUnitMovement.position = targetPositions[positionIndex];
                 positionIndex = (positionIndex + 1) % targetPositions.Count;
                 switch (BlobUtils.GetMajorState())

@@ -1,4 +1,7 @@
-﻿using TMPro;
+﻿using System;
+using System.Runtime.InteropServices;
+using Components;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using Utils;
@@ -30,6 +33,9 @@ public class GameManager : MonoBehaviour
     #endregion
     
     private int _blobCount;
+    private int _idleCount;
+    private int _liquidCount;
+    private int _viscousCount;
     private const string StateText = "Current state : ";
 
     // handle GameManager instance
@@ -50,14 +56,36 @@ public class GameManager : MonoBehaviour
         _instance.stateUpdate.text = StateText + state;
     }
 
-    public void UpdateBlobCount(int nb)
+    public void UpdateBlobCount(int nb, BlobInfosComponent.BlobState state)
     {
-        _blobCount = nb;
+        _instance._blobCount = nb;
+        switch (state)
+        {
+            case BlobInfosComponent.BlobState.Idle:
+                _instance._idleCount += 1;
+                break;
+            case BlobInfosComponent.BlobState.Liquid:
+                _instance._liquidCount += 1;
+                break;
+            case BlobInfosComponent.BlobState.Viscous:
+                _instance._viscousCount += 1;
+                break;
+            default:
+                _instance._idleCount += 1;
+                break;
+        }
     }
     
     public int GetCurrentBlobCount()
     {
-        return _blobCount;
+        return _instance._blobCount;
+    }
+
+    public void GetBlobCounts(out int idle, out int liquid, out int viscous)
+    {
+        idle = _instance._idleCount;
+        liquid = _instance._liquidCount;
+        viscous = _instance._viscousCount;
     }
     #endregion
 }
