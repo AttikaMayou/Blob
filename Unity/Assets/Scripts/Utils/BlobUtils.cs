@@ -287,11 +287,9 @@ namespace Utils
             var nbBlob = GameManager.GetInstance().GetCurrentBlobCount();
             GameManager.GetInstance().GetBlobCounts(out var idleFactor, out var liquidFactor, out var viscousFactor);
             
-            var medium = (GameManager.GetInstance().blobIdleRadius * (float)idleFactor / nbBlob) +
-                         (GameManager.GetInstance().blobLiquidRadius * (float)liquidFactor / nbBlob) +
-                         (GameManager.GetInstance().blobViscousRadius * (float)viscousFactor / nbBlob);
-            
-            Debug.Log("medium radius : " + medium);
+            var medium = (GameManager.GetInstance().blobIdleRadius * idleFactor / nbBlob) +
+                         (GameManager.GetInstance().blobLiquidRadius * liquidFactor / nbBlob) +
+                         (GameManager.GetInstance().blobViscousRadius * viscousFactor / nbBlob);
 
             _instance.currentMediumRadius = medium;
         }

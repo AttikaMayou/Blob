@@ -13,21 +13,20 @@ using static Unity.Mathematics.math;
 public class RadiusUpdateSystem : JobComponentSystem
 {
     [BurstCompile]
-    struct RadiusUpdateSystemJob : IJobForEach<Translation, BlobUnitedComponent>
+    struct RadiusUpdateSystemJob : IJobForEach<Translation, BlobUnitedComponent, BlobUnitMovement>
     {
         public float DeltaTime;
         public float TargetRadius;
-
-        public void Execute(ref Translation translation, ref BlobUnitedComponent blobUnited)
+        
+        public void Execute(ref Translation translation, ref BlobUnitedComponent blobUnited, ref BlobUnitMovement blobMove)
         {
-            if (!blobUnited.united) return;
-            
-            if (!blobUnited.needUpdate) return;
+            if (!blobUnited.united || !blobMove.move || !blobUnited.needUpdate) return;
             
             if (blobUnited.lerpTime <= blobUnited.distanceToOthers)
             {
                 blobUnited.lerpTime += DeltaTime;
-                blobUnited.radiusValue = lerp(blobUnited.radiusValue, TargetRadius, clamp(blobUnited.lerpTime / blobUnited.distanceToOthers, 0.0f, 1.0f));
+                blobUnited.radiusValue = lerp(blobUnited.radiusValue, TargetRadius,
+                    clamp(blobUnited.lerpTime / blobUnited.distanceToOthers, 0.0f, 1.0f));
             }
             else
             {
