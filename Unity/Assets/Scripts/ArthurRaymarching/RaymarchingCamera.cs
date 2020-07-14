@@ -84,6 +84,12 @@ public class RaymarchingCamera : SceneViewFilter
     public int nbViscous = 0;
     public int nbIdle = 0;
 
+    private float radius = 0;
+    private float newRadius = 0;
+    private float t = 0;
+    private List<float> oldRadius = new List<float>(); 
+    List<float> leTest = new List<float>();
+
     [ImageEffectOpaque]
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
@@ -108,20 +114,28 @@ public class RaymarchingCamera : SceneViewFilter
         GameManager gm = GameManager.GetInstance();
         gm.GetBlobCounts(out nbIdle, out nbLiquid, out nbViscous);
 
-        float radius = 0;
+        if (nbSphere != oldRadius.Count)
+        {
+            leTest.Add(BlobUtils.GetBlobsCurrentPositions()[0].w);
+            oldRadius.Add(BlobUtils.GetBlobsCurrentPositions()[0].w);
+            t = 0;
+        }
+
         if (nbSphere != 0)
-            radius = (gm.blobLiquidRadius * nbLiquid / nbSphere) +
+            newRadius = (gm.blobLiquidRadius * nbLiquid / nbSphere) +
                      (gm.blobIdleRadius * nbIdle / nbSphere) + 
                      (gm.blobViscousRadius * nbViscous / nbSphere);
 
+
         for (int i = 0; i < nbSphere; i++)
         {
-            
+            radius = Mathf.Lerp(oldRadius[i], newRadius, t);
+
             _spheresPos.SetPixel(i, 0, new Color(BlobUtils.GetBlobsCurrentPositions()[i].x * 0.001f,
                                                  BlobUtils.GetBlobsCurrentPositions()[i].y * 0.001f,
                                                  BlobUtils.GetBlobsCurrentPositions()[i].z * 0.001f,
                                                  radius * 0.001f));
-
+            Debug.Log(radius);
             switch (BlobUtils.GetBlobCurrentStates()[i])
             {
                 case BlobState.Liquid:
@@ -136,7 +150,14 @@ public class RaymarchingCamera : SceneViewFilter
                     _colors.SetPixel(i, 0, _gradiantIdle.Evaluate(1f / 8 * (i % 8)));
                     break;
             }
+            oldRadius[i] = radius;
         }
+
+        if (nbSphere != 0 && t <= 0.999)
+            t += 0.2f * Time.deltaTime;
+        if (t > 0.999)
+            t = 0;
+
         _spheresPos.Apply();
         _colors.Apply();
 
