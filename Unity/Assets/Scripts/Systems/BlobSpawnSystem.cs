@@ -22,7 +22,7 @@ public class BlobSpawnSystem : ComponentSystem
         {
             Entities.ForEach((ref PrefabEntityComponent prefabEntityComponent) =>
             {
-                SpawnAnEntity(prefabEntityComponent.BlobEntityPrefab, BlobState.Liquid, GameManager.GetInstance().blobLiquidSpeed, GameManager.GetInstance().liquidSpeedMultiplier);
+                SpawnAnEntity(prefabEntityComponent.BlobLiquidPrefab, BlobState.Liquid, GameManager.GetInstance().blobLiquidSpeed, GameManager.GetInstance().liquidSpeedMultiplier);
             });
         }
         
@@ -30,7 +30,7 @@ public class BlobSpawnSystem : ComponentSystem
         {
             Entities.ForEach((ref PrefabEntityComponent prefabEntityComponent) =>
             {
-                SpawnAnEntity(prefabEntityComponent.BlobEntityPrefab, BlobState.Viscous, GameManager.GetInstance().blobViscousSpeed,GameManager.GetInstance().viscousSpeedMultiplier);
+                SpawnAnEntity(prefabEntityComponent.BlobViscousPrefab, BlobState.Viscous, GameManager.GetInstance().blobViscousSpeed,GameManager.GetInstance().viscousSpeedMultiplier);
             });
         }
     }

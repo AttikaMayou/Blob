@@ -6,5 +6,7 @@ namespace Components
     public struct PrefabEntityComponent : IComponentData
     {
         public Entity BlobEntityPrefab;
+        public Entity BlobLiquidPrefab;
+        public Entity BlobViscousPrefab;
     }
 }
