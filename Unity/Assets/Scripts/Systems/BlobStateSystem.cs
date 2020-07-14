@@ -1,4 +1,5 @@
-﻿using Components;
+﻿using System;
+using Components;
 using Unity.Entities;
 using Unity.Transforms;
 using Utils;
@@ -14,11 +15,33 @@ public class BlobStateSystem : ComponentSystem
     {
         BlobUtils.UpdateMajorState(ChooseState());
         
-        Entities.WithAll<BlobUnitedComponent, BlobInfosComponent>().ForEach((Entity entity, ref BlobUnitedComponent blobUnited, ref BlobInfosComponent blobInfos) =>
+        Entities.WithAll<BlobUnitedComponent, BlobInfosComponent, BlobUnitMovement>().ForEach((Entity entity, 
+            ref BlobUnitedComponent blobUnited, ref BlobInfosComponent blobInfos, ref BlobUnitMovement blobMovement) =>
         {
             if (blobUnited.united)
             {
+                var majorState = BlobUtils.GetMajorState();
                 blobInfos.blobUnitState = BlobUtils.GetMajorState();
+
+                switch (majorState)
+                {
+                    case BlobState.Idle:
+                        blobMovement.moveSpeed = GameManager.GetInstance().blobIdleSpeed;
+                        blobMovement.moveMultiplier = GameManager.GetInstance().idleSpeedMultiplier;
+                        break;
+                    case BlobState.Liquid:
+                        blobMovement.moveSpeed = GameManager.GetInstance().blobLiquidSpeed;
+                        blobMovement.moveMultiplier = GameManager.GetInstance().liquidSpeedMultiplier;
+                        break;
+                    case BlobState.Viscous:
+                        blobMovement.moveSpeed = GameManager.GetInstance().blobViscousSpeed;
+                        blobMovement.moveMultiplier = GameManager.GetInstance().viscousSpeedMultiplier;
+                        break;
+                    default:
+                        blobMovement.moveSpeed = GameManager.GetInstance().blobIdleSpeed;
+                        blobMovement.moveMultiplier = GameManager.GetInstance().idleSpeedMultiplier;
+                        break;
+                }
             }
         });
     }

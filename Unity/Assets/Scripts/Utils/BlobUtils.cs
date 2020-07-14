@@ -32,8 +32,7 @@ namespace Utils
         public List<BlobState> currentBlobStates;
         public BlobState currentMajorState;
         
-        //Current united component of all blobs
-        public List<bool> currentBlobUnited;
+        public float currentMediumRadius;
         #endregion
 
         #region physics methods
@@ -244,11 +243,10 @@ namespace Utils
         }
 
         // for each blob : keep track of position, radius and state 
-        public static void UpdateBlobPositions(List<float3> positions, List<float> radius, List<BlobState> states, List<bool> united)
+        public static void UpdateBlobPositions(List<float3> positions, List<float> radius, List<BlobState> states)
         {
             var updatedPositions = new List<Vector4>();
             var updatedStates = new List<BlobState>();
-            var updatedUnited = new List<bool>();
             
             for(var i = 0; i < positions.Count; ++i)
             {
@@ -257,12 +255,10 @@ namespace Utils
                     positions[i].z, 
                     radius[i]));
                 updatedStates.Add(states[i]);
-                updatedUnited.Add(united[i]);
             }
 
             _instance.currentBlobPositions = updatedPositions;
             _instance.currentBlobStates = updatedStates;
-            _instance.currentBlobUnited = updatedUnited;
         }
 
         public static List<Vector4> GetBlobsCurrentPositions()
@@ -284,6 +280,25 @@ namespace Utils
         public static BlobState GetMajorState()
         {
             return _instance.currentMajorState;
+        }
+
+        public static void CalculateMediumRadius()
+        {
+            var nbBlob = GameManager.GetInstance().GetCurrentBlobCount();
+            GameManager.GetInstance().GetBlobCounts(out var idleFactor, out var liquidFactor, out var viscousFactor);
+            
+            var medium = (GameManager.GetInstance().blobIdleRadius * (float)idleFactor / nbBlob) +
+                         (GameManager.GetInstance().blobLiquidRadius * (float)liquidFactor / nbBlob) +
+                         (GameManager.GetInstance().blobViscousRadius * (float)viscousFactor / nbBlob);
+            
+            Debug.Log("medium radius : " + medium);
+
+            _instance.currentMediumRadius = medium;
+        }
+
+        public static float GetMediumRadius()
+        {
+            return _instance.currentMediumRadius;
         }
         
         #endregion

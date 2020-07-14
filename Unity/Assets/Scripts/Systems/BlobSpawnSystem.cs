@@ -2,6 +2,7 @@
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
+using Utils;
 using BlobState = Components.BlobInfosComponent.BlobState;
 
 //Author : Attika
@@ -45,9 +46,12 @@ public class BlobSpawnSystem : ComponentSystem
             new BlobInfosComponent {blobUnitState = state});
         EntityManager.SetComponentData(spawnedEntity, 
             new BlobUnitMovement{moveSpeed = speed, moveMultiplier = multiplier});
-        
+        EntityManager.SetComponentData(spawnedEntity,
+            new BlobUnitedComponent{united = false, lerpTime = 0.0f});
+
         // update current number of blobs in scene
         GameManager.GetInstance().UpdateBlobCount(GameManager.GetInstance().GetCurrentBlobCount() + 1, state);
+        BlobUtils.CalculateMediumRadius();
 
     }
 }

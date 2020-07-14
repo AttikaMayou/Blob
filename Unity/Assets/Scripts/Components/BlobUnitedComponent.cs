@@ -10,5 +10,6 @@ namespace Components
     public struct BlobUnitedComponent : IComponentData
     {
         public bool united;
+        public float lerpTime;
     }
 }
