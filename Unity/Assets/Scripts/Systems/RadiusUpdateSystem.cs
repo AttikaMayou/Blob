@@ -17,7 +17,6 @@ public class RadiusUpdateSystem : JobComponentSystem
     {
         public float DeltaTime;
         public float TargetRadius;
-        public float SpeedChange;
 
         public void Execute(ref Translation translation, ref BlobUnitedComponent blobUnited)
         {
@@ -25,10 +24,10 @@ public class RadiusUpdateSystem : JobComponentSystem
             
             if (!blobUnited.needUpdate) return;
             
-            if (blobUnited.lerpTime <= SpeedChange)
+            if (blobUnited.lerpTime <= blobUnited.distanceToOthers)
             {
                 blobUnited.lerpTime += DeltaTime;
-                blobUnited.radiusValue = lerp(blobUnited.radiusValue, TargetRadius, blobUnited.lerpTime / SpeedChange);
+                blobUnited.radiusValue = lerp(blobUnited.radiusValue, TargetRadius, clamp(blobUnited.lerpTime / blobUnited.distanceToOthers, 0.0f, 1.0f));
             }
             else
             {
@@ -44,8 +43,7 @@ public class RadiusUpdateSystem : JobComponentSystem
         var job = new RadiusUpdateSystemJob()
         { 
             DeltaTime = UnityEngine.Time.deltaTime,
-            TargetRadius = BlobUtils.GetMediumRadius(),
-            SpeedChange = GameManager.GetInstance().changeStateSpeed,
+            TargetRadius = BlobUtils.GetMediumRadius()
         };
         
         return job.Schedule(this, inputDependencies);
