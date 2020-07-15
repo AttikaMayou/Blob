@@ -89,7 +89,8 @@ public class RaymarchingCamera : SceneViewFilter
 
     private Color color;
     private float t = 0;
-
+    private List<float> oldSmooth = new List<float>();
+    private float newSmooth;
 
     [ImageEffectOpaque]
     void OnRenderImage(RenderTexture source, RenderTexture destination)
@@ -111,14 +112,40 @@ public class RaymarchingCamera : SceneViewFilter
 
         Color[] pos = new Color[nbSphere];
 
-        //Proportionnal radius
+        //Proportionnal smooth
         GameManager gm = GameManager.GetInstance();
         gm.GetBlobCounts(out nbIdle, out nbLiquid, out nbViscous);
+
+        if(nbSphere != oldSmooth.Count)
+        {
+            switch (BlobUtils.GetBlobCurrentStates()[nbSphere - 1])
+            {
+                case BlobState.Liquid:
+                    oldSmooth.Add(_sphereSmoothLiquid);
+                    break;
+
+                case BlobState.Viscous:
+                    oldSmooth.Add(_sphereSmoothViscious);
+                    break;
+
+                default:
+                    oldSmooth.Add(_sphereSmoothIdle);
+                    break;
+            }
+        }
+
+        if (nbSphere != 0)
+            newSmooth = (_sphereSmoothLiquid * nbLiquid / nbSphere) +
+                        (_sphereSmoothViscious * nbViscous / nbSphere) +
+                        (_sphereSmoothIdle * nbIdle / nbSphere);
+
+
+
         color = new Color();
 
         for (int i = 0; i < nbSphere; i++)
         {
-            //color = Mathf.Lerp(oldRadius[i], newRadius, t);
+            _sphereSmooth = Mathf.Lerp(oldSmooth[i], newSmooth, t);
 
             _spheresPos.SetPixel(i, 0, new Color(BlobUtils.GetBlobsCurrentPositions()[i].x * 0.001f,
                                                  BlobUtils.GetBlobsCurrentPositions()[i].y * 0.001f,
@@ -139,6 +166,8 @@ public class RaymarchingCamera : SceneViewFilter
                     color += _gradiantIdle.Evaluate(1f / 8 * (i % 8));
                     break;
             }
+
+            oldSmooth[i] = _sphereSmooth;
         }
 
         _colors.SetPixel(0, 0, color / nbSphere);
@@ -151,26 +180,7 @@ public class RaymarchingCamera : SceneViewFilter
 
         _spheresPos.Apply();
         _colors.Apply();
-        
-        //SmoothFunction
-        switch (BlobUtils.GetMajorState())
-        {
-            case BlobState.Liquid:
-                _sphereSmooth = _sphereSmooth - 0.01f;
-                if (_sphereSmooth < _sphereSmoothLiquid)
-                    _sphereSmooth = _sphereSmoothLiquid;
-                break;
-
-            case BlobState.Viscous:
-                _sphereSmooth = _sphereSmooth + 0.01f;
-                if (_sphereSmooth > _sphereSmoothViscious)
-                    _sphereSmooth = _sphereSmoothViscious;
-                break;
-
-            default:
-                _sphereSmooth = _sphereSmooth;
-                break;
-        }
+       
         
         // Camera
         _raymarchMaterial.SetMatrix("_CamFrustum", GetFrustumCorners(_camera));
