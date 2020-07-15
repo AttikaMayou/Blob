@@ -92,7 +92,7 @@ MonoBehaviour:
   viscousSpeedMultiplier: 0.1
   blobIdleRadius: 1
   blobLiquidRadius: 0.5
-  blobViscousRadius: 1.5
+  blobViscousRadius: 1.2
   stateUpdate: {fileID: 0}
 --- !u!114 &6015496963288570027
 MonoBehaviour:

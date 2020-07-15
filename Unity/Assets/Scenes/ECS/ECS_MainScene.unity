@@ -1514,7 +1514,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1392328687}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5633a93d4b2b90d43aab8b854d4e6abe, type: 3}
   m_Name: 
@@ -1625,7 +1625,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1392328687}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9edf1a9da041af2498a9584bfb2d9e90, type: 3}
   m_Name: 
@@ -2775,52 +2775,52 @@ PrefabInstance:
     - target: {fileID: 1911329978051205337, guid: 75ae83b10bfb1864b93495b2663f9040,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1911329978051205337, guid: 75ae83b10bfb1864b93495b2663f9040,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1911329978051205337, guid: 75ae83b10bfb1864b93495b2663f9040,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1911329978051205337, guid: 75ae83b10bfb1864b93495b2663f9040,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1911329978051205337, guid: 75ae83b10bfb1864b93495b2663f9040,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1234
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1911329978051205337, guid: 75ae83b10bfb1864b93495b2663f9040,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 614
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2389712014815345842, guid: 75ae83b10bfb1864b93495b2663f9040,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 73
+      value: 142
       objectReference: {fileID: 0}
     - target: {fileID: 2389712014815345842, guid: 75ae83b10bfb1864b93495b2663f9040,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 17
+      value: 31
       objectReference: {fileID: 0}
     - target: {fileID: 2389712014815345842, guid: 75ae83b10bfb1864b93495b2663f9040,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 14
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 2389712014815345842, guid: 75ae83b10bfb1864b93495b2663f9040,
         type: 3}
       propertyPath: m_textInfo.lineCount
-      value: 3
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 2389712014815345842, guid: 75ae83b10bfb1864b93495b2663f9040,
         type: 3}
@@ -2837,6 +2837,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_textAlignment
       value: 514
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389712014815345842, guid: 75ae83b10bfb1864b93495b2663f9040,
+        type: 3}
+      propertyPath: m_text
+      value: 'Tab : close instructions
+
+
+        E : spawn an entity
+
+        V :
+        spawn a viscous entity
+
+        L : spawn a liquid entity
+
+
+        R : reset
+        scene
+
+
+        Echap : close application'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2389712014815345842, guid: 75ae83b10bfb1864b93495b2663f9040,
+        type: 3}
+      propertyPath: m_fontStyle
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2798124913428967795, guid: 75ae83b10bfb1864b93495b2663f9040,
         type: 3}
