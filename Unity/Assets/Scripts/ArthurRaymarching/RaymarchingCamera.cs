@@ -70,9 +70,6 @@ public class RaymarchingCamera : SceneViewFilter
     public Cubemap _reflectionCube;
 
     [Header("Color")]
-    public Gradient _gradiantViscious;
-    public Gradient _gradiantIdle;
-    public Gradient _gradiantLiquid;
     private Color[] _sphereColor;
     [Range(0, 4)] public float _colorIntensity;
 
@@ -151,26 +148,10 @@ public class RaymarchingCamera : SceneViewFilter
                                                  BlobUtils.GetBlobsCurrentPositions()[i].y * 0.001f,
                                                  BlobUtils.GetBlobsCurrentPositions()[i].z * 0.001f,
                                                  BlobUtils.GetBlobsCurrentPositions()[i].w * 0.001f));
-            //Moyenne des couleurs
-            switch (BlobUtils.GetBlobCurrentStates()[i])
-            {
-                case BlobState.Liquid:
-                    color += _gradiantLiquid.Evaluate(1f / 8 * (i % 8));
-                    break;
-
-                case BlobState.Viscous:
-                    color += _gradiantViscious.Evaluate(1f / 8 * (i % 8));
-                    break;
-
-                default:
-                    color += _gradiantIdle.Evaluate(1f / 8 * (i % 8));
-                    break;
-            }
-
             oldSmooth[i] = _sphereSmooth;
         }
 
-        _colors.SetPixel(0, 0, color / nbSphere);
+        _colors.SetPixel(0, 0, ComputeColor.getColor());
 
         //Pour le lerp
         if (nbSphere != 0 && t <= 0.999)
