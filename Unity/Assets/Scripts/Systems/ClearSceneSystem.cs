@@ -8,7 +8,7 @@ public class ClearSceneSystem : ComponentSystem
 {
     protected override void OnUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             CleanWorldFromEntities();
         }
