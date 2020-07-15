@@ -2690,21 +2690,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4546015319738074754, guid: 75ae83b10bfb1864b93495b2663f9040,
-        type: 3}
-      propertyPath: m_text
-      value: 'Entities count : 0'
-      objectReference: {fileID: 0}
-    - target: {fileID: 4546015319738074754, guid: 75ae83b10bfb1864b93495b2663f9040,
-        type: 3}
-      propertyPath: m_textInfo.characterCount
-      value: 18
-      objectReference: {fileID: 0}
-    - target: {fileID: 4546015319738074754, guid: 75ae83b10bfb1864b93495b2663f9040,
-        type: 3}
-      propertyPath: m_textInfo.wordCount
-      value: 3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75ae83b10bfb1864b93495b2663f9040, type: 3}
 --- !u!114 &2798124914024703897 stripped

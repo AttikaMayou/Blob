@@ -218,7 +218,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Entities count : '
+  m_text: 'Entities count : 0'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -287,10 +287,10 @@ MonoBehaviour:
   m_margin: {x: 0.5732422, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 4546015319738074754}
-    characterCount: 17
+    characterCount: 18
     spriteCount: 0
     spaceCount: 3
-    wordCount: 2
+    wordCount: 3
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -539,7 +539,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -0.12069702, y: 0, z: 0, w: 0}
+  m_margin: {x: 0.3861084, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 2798124913935743365}
     characterCount: 16
@@ -603,7 +603,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 521, y: 147.14}
+  m_SizeDelta: {x: 521, y: 95}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &2798124914663993000
 CanvasRenderer:
@@ -777,12 +777,22 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'E : spawn an entity
+  m_text: 'Tab : close instructions
 
-    V : spawn a viscous entity
 
-    L : spawn a liquid
-    entity'
+    E : spawn an entity
+
+    V : spawn a viscous
+    entity
+
+    L : spawn a liquid entity
+
+
+    R : reset scene
+
+
+    Echap : close
+    application'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -851,12 +861,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 2389712014815345842}
-    characterCount: 72
+    characterCount: 142
     spriteCount: 0
-    spaceCount: 16
-    wordCount: 14
+    spaceCount: 31
+    wordCount: 23
     linkCount: 0
-    lineCount: 3
+    lineCount: 9
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -906,8 +916,8 @@ RectTransform:
   m_Father: {fileID: 2798124913428967799}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1234, y: 614}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
