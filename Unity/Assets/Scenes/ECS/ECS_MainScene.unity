@@ -1649,7 +1649,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1392328687}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9edf1a9da041af2498a9584bfb2d9e90, type: 3}
   m_Name: 
@@ -2915,6 +2915,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2798124913935743364, guid: 75ae83b10bfb1864b93495b2663f9040,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2798124913935743364, guid: 75ae83b10bfb1864b93495b2663f9040,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2798124913935743364, guid: 75ae83b10bfb1864b93495b2663f9040,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2798124913935743364, guid: 75ae83b10bfb1864b93495b2663f9040,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 32
+      objectReference: {fileID: 0}
+    - target: {fileID: 2798124913935743364, guid: 75ae83b10bfb1864b93495b2663f9040,
+        type: 3}
+      propertyPath: m_Pivot.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2798124913935743365, guid: 75ae83b10bfb1864b93495b2663f9040,
+        type: 3}
+      propertyPath: m_margin.x
+      value: 10.190002
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75ae83b10bfb1864b93495b2663f9040, type: 3}
