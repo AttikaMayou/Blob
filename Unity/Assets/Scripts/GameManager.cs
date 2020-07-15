@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     [Header ("Game Parameters")]
     public int nbEntitiesOnFirstRing;
     public float toleranceDistance;
+    public TextMeshProUGUI entitiesCount;
+    public TextMeshProUGUI fpsUpdate;
 
     [Header("State Parameters")]
     public float blobIdleSpeed;
@@ -37,6 +39,12 @@ public class GameManager : MonoBehaviour
     private int _liquidCount = 0;
     private int _viscousCount = 0;
     private const string StateText = "Current state : ";
+    private const string EntitiesText = "Entites count : ";
+    private const string FpsText = "FPS : ";
+    private int _frameCount = 0;
+    private float _dt = 0.0f;
+    private float _updateRate = 4.0f;
+    private float _fps = 0.0f;
 
     // handle GameManager instance
     private static GameManager _instance;
@@ -50,6 +58,20 @@ public class GameManager : MonoBehaviour
             _instance = this;
     }
 
+    private void Update()
+    {
+        _frameCount++;
+        _dt += Time.deltaTime;
+        if (_dt > 1.0 / _updateRate)
+        {
+            _fps = _frameCount / _dt;
+            _frameCount = 0;
+            _dt -= 1 / _updateRate;
+        }
+
+        fpsUpdate.text = FpsText + _fps;
+    }
+
     #region Public Methods
     public void UpdateStateFeedback(string state)
     {
@@ -59,6 +81,7 @@ public class GameManager : MonoBehaviour
     public void UpdateBlobCount(int nb, BlobInfosComponent.BlobState state)
     {
         _instance._blobCount = nb;
+        _instance.entitiesCount.text = EntitiesText + _instance._blobCount;
         switch (state)
         {
             case BlobInfosComponent.BlobState.Idle:

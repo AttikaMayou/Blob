@@ -84,6 +84,8 @@ MonoBehaviour:
     z: 0
   nbEntitiesOnFirstRing: 5
   toleranceDistance: 0.1
+  entitiesCount: {fileID: 0}
+  fpsUpdate: {fileID: 0}
   blobIdleSpeed: 10
   blobLiquidSpeed: 20
   blobViscousSpeed: 5
