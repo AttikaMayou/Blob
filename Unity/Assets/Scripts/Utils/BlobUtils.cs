@@ -18,6 +18,7 @@ namespace Utils
         {
             if (!_instance)
                 _instance = this;
+            _manager = World.DefaultGameObjectInjectionWorld.EntityManager;
         }
         
         #region Public Variables
@@ -50,19 +51,19 @@ namespace Utils
         /// <returns></returns>
         public static EntityManager GetCurrentEntityManager()
         {
-            return _manager ?? (_manager = World.DefaultGameObjectInjectionWorld.EntityManager);
+            return _manager;
         }
 
         // get current world
         private static World GetCurrentWorld()
         {
-            return _world ?? (_world = GetCurrentEntityManager().World);
+            return _world ??= GetCurrentEntityManager().World;
         }
 
         // build the physic world
         private static BuildPhysicsWorld BuildPhysicsWorld()
         {
-            return _buildPhysicsWorld ?? (_buildPhysicsWorld = GetCurrentWorld().GetExistingSystem<Unity.Physics.Systems.BuildPhysicsWorld>());
+            return _buildPhysicsWorld ??= GetCurrentWorld().GetExistingSystem<BuildPhysicsWorld>();
         }
 
         // get current physic world
@@ -84,7 +85,7 @@ namespace Utils
         /// </summary>
         /// <param name="mask"></param>
         /// <returns></returns>
-        public static CollisionFilter LayerMaskToFilter(LayerMask mask)
+        private static CollisionFilter LayerMaskToFilter(LayerMask mask)
         {
             var filter = new CollisionFilter()
             {
